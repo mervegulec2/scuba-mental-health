@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll } from "framer-motion";
 import { useRef, useMemo, useState, useEffect } from "react";
 import {
   SparklesIcon,
@@ -28,7 +28,7 @@ const team = [
 ];
 
 /* ---------------------- Logo ---------------------- */
-function LogoMoodi({ className = "h-6 w-6" }) {
+function LogoWellMood({ className = "h-6 w-6" }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
       <defs>
@@ -59,13 +59,25 @@ const appear = {
   viewport: { once: true, margin: "-80px" },
 };
 
+/* ---------------------- Card (modern frame) ---------------------- */
 function Card({ children, className = "" }) {
   return (
     <motion.div
-      {...appear}
-      whileHover={{ y: -4, scale: 1.01 }}
-      transition={{ ...appear.transition, duration: 0.35 }}
-      className={`rounded-2xl border bg-white/70 backdrop-blur shadow-sm hover:shadow-lg hover:border-[#8B5CF6]/40 transition-all ${className}`}
+      initial={false}
+      whileHover={{ y: -2 }}
+      transition={{ ...appear.transition, duration: 0.3 }}
+      className={
+        [
+          // Solid background to avoid scroll-time glow, no backdrop-blur
+          "rounded-2xl bg-white",
+          // Modern subtle border + ring on hover
+          "border border-slate-200/80 shadow-sm",
+          "hover:shadow-md hover:border-slate-300",
+          // Smooth transitions
+          "transition-all",
+          className,
+        ].join(" ")
+      }
     >
       {children}
     </motion.div>
@@ -78,7 +90,7 @@ function ParticleTrail() {
   useEffect(() => {
     const onMove = (e) => {
       const x = e.clientX, y = e.clientY;
-      setTrail((t) => [...t.slice(-18), { x, y, id: crypto.randomUUID() }]); // son 18 nokta
+      setTrail((t) => [...t.slice(-18), { x, y, id: crypto.randomUUID() }]);
     };
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
@@ -96,11 +108,11 @@ function ParticleTrail() {
             height: 16 + i * 0.6,
             background:
               i % 2 === 0
-                ? "radial-gradient(circle, #6E56CF66, transparent 60%)"
-                : "radial-gradient(circle, #8B5CF666, transparent 60%)",
+                ? "radial-gradient(circle, #6E56CF33, transparent 60%)"
+                : "radial-gradient(circle, #8B5CF633, transparent 60%)",
             filter: "blur(2px)",
           }}
-          initial={{ opacity: 0.35, scale: 0.9 }}
+          initial={{ opacity: 0.25, scale: 0.9 }}
           animate={{ opacity: 0, scale: 1.4, y: -6 }}
           transition={{ duration: 0.8 }}
         />
@@ -111,10 +123,10 @@ function ParticleTrail() {
 
 /* ---------------------- Brand word animation ---------------------- */
 function AnimatedBrand() {
-  const letters = useMemo(() => "Moodi".split(""), []);
+  const letters = useMemo(() => "Scuba - Mental Health".split(""), []);
   return (
     <div className="flex items-center gap-2">
-      <LogoMoodi className="h-7 w-7" />
+      <LogoWellMood className="h-7 w-7" />
       <div className="font-extrabold text-xl tracking-tight">
         {letters.map((ch, idx) => (
           <motion.span
@@ -134,11 +146,7 @@ function AnimatedBrand() {
 /* ---------------------- App ---------------------- */
 export default function App() {
   const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const phoneY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const phoneRot = useTransform(scrollYProgress, [0, 1], [0, -3]);
-
-  // global scroll progress bar
+  // Keep scroll progress bar; remove mockup rotation & parallax per request
   const { scrollYProgress: globalProgress } = useScroll();
 
   return (
@@ -153,8 +161,8 @@ export default function App() {
       <ParticleTrail />
 
       {/* NAV */}
-      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-white/70 border-b">
-        <nav className="mx-auto max-w-[96rem] px-6 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-50 bg-white/95 border-b">{/* removed backdrop-blur to avoid glow */}
+        <nav className="mx-auto max-w-[96rem] px-4 md:px-6 py-3 flex items-center justify-between">
           <a href="#home" className="flex items-center gap-2">
             <AnimatedBrand />
           </a>
@@ -166,7 +174,7 @@ export default function App() {
                 key={name}
                 href={href}
                 className="flex items-center gap-1.5 hover:text-[#6E56CF] relative group"
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.04 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <Icon className="h-4 w-4 opacity-70 group-hover:opacity-100" />
@@ -179,10 +187,8 @@ export default function App() {
           {/* fixed readable CTA */}
           <a
             href="#contact"
-            className="rounded-2xl px-4 py-2 text-white text-sm font-semibold shadow-md transition-all
-                       bg-gradient-to-r from-[#6E56CF] to-[#8B5CF6]
-                       hover:shadow-lg hover:scale-[1.03] active:scale-[0.99]"
-            style={{ WebkitTextFillColor: "#fff" }} // bazı Mac temalarında okunurluk için
+            className="rounded-2xl px-4 py-2 text-white text-sm font-semibold shadow-md transition-all bg-gradient-to-r from-[#6E56CF] to-[#8B5CF6] hover:shadow-lg hover:scale-[1.03] active:scale-[0.99]"
+            style={{ WebkitTextFillColor: "#fff" }}
           >
             Request Demo
           </a>
@@ -191,49 +197,36 @@ export default function App() {
 
       {/* HERO */}
       <section id="home" ref={heroRef} className="relative overflow-hidden">
-        {/* animated blobs */}
+        {/* toned-down animated blobs to prevent bright bleed through cards */}
         <motion.div className="absolute inset-0 -z-10 overflow-hidden">
-          {[...Array(6)].map((_, i) => (
+          {[...Array(4)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-48 h-48 rounded-full blur-3xl opacity-20"
+              className="absolute w-40 h-40 rounded-full opacity-15" /* removed heavy blur */
               style={{
                 background: i % 2 ? "#6E56CF" : "#8B5CF6",
-                top: `${Math.random() * 80}%`,
-                left: `${Math.random() * 80}%`,
+                top: `${10 + i * 18}%`,
+                left: `${8 + (i * 22) % 70}%`,
+                filter: "blur(24px)",
               }}
-              animate={{ scale: [1, 1.3, 1], opacity: [0.18, 0.32, 0.18] }}
-              transition={{ duration: 6 + Math.random() * 4, repeat: Infinity, ease: "easeInOut" }}
+              animate={{ scale: [1, 1.15, 1], opacity: [0.12, 0.2, 0.12] }}
+              transition={{ duration: 10 + i, repeat: Infinity, ease: "easeInOut" }}
             />
           ))}
         </motion.div>
 
-        {/* soft radial glows */}
-        <motion.div
-          className="pointer-events-none absolute -z-10 size-[900px] rounded-full blur-3xl"
-          style={{ background: "radial-gradient(closest-side,#6E56CF33,#6E56CF00)" }}
-          animate={{ x: [200, 0, 200], y: [-80, 60, -80] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="pointer-events-none absolute -z-10 size-[700px] rounded-full blur-3xl"
-          style={{ right: -150, top: -120, background: "radial-gradient(closest-side,#FFC85733,#FFC85700)" }}
-          animate={{ x: [0, -120, 0], y: [0, 80, 0] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-        />
-
-        <div className="mx-auto max-w-[96rem] px-6 py-20 grid lg:grid-cols-2 gap-12 items-center min-h-[82vh]">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-20 grid lg:grid-cols-2 gap-10 md:gap-12 items-center min-h-[76vh]">
           {/* Left */}
           <motion.div {...appear}>
-            <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-slate-600 bg-white/70 backdrop-blur">
-              <LogoMoodi className="h-4 w-4" />
+            <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-slate-600 bg-white">
+              <LogoWellMood className="h-4 w-4" />
               On-device & Privacy-first
             </div>
-            <h1 className="mt-4 text-4xl md:text-5xl font-extrabold leading-tight">
+            <h1 className="mt-4 text-3xl md:text-5xl font-extrabold leading-tight">
               On-device <span className="underline decoration-[#FFC857] underline-offset-4">Passive Sensing</span> for Mental Well-Being
             </h1>
-            <p className="mt-5 text-lg text-slate-600">
-              Moodi analyzes smartphone & wearable signals <strong>entirely on-device</strong> to estimate depression risk early, track
+            <p className="mt-5 text-base md:text-lg text-slate-600">
+              Scuba analyzes smartphone & wearable signals <strong>entirely on-device</strong> to estimate depression risk early, track
               progression, and deliver micro-interventions, reminders, and habit streaks—without sending raw data to servers.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -256,13 +249,10 @@ export default function App() {
             </div>
           </motion.div>
 
-          {/* Right mockup (parallax) */}
-          <motion.div
-            className="relative flex justify-end lg:-translate-x-10 xl:-translate-x-16 2xl:-translate-x-24"
-            style={{ y: phoneY, rotate: phoneRot }}
-          >
-            <div className="w-[440px] rounded-[2rem] border bg-white shadow-xl">
-              <div className="h-8 rounded-t-[2rem] bg-slate-100 flex items-center justify-center text-[10px] text-slate-500">Moodi</div>
+          {/* Right mockup (FIXED – no scroll rotate or parallax) */}
+          <div className="relative flex justify-end lg:-translate-x-10 xl:-translate-x-16 2xl:-translate-x-24">
+            <div className="w-full max-w-[440px] rounded-[2rem] border bg-white shadow-xl">
+              <div className="h-8 rounded-t-[2rem] bg-slate-100 flex items-center justify-center text-[10px] text-slate-500">Scuba - Mental Health</div>
               <div className="p-4 space-y-4">
                 <Card className="p-4">
                   <div className="flex items-center justify-between">
@@ -280,7 +270,7 @@ export default function App() {
                 </Card>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <motion.div {...appear} whileHover={{ scale: 1.02 }} className="rounded-2xl border bg-white/70 backdrop-blur shadow-sm p-4">
+                  <motion.div {...appear} whileHover={{ scale: 1.02 }} className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
                     <h4 className="font-semibold">Micro-Intervention</h4>
                     <p className="text-xs text-slate-500">3-min breathing</p>
                     <motion.div
@@ -326,26 +316,26 @@ export default function App() {
 
             {/* floating stat cards */}
             <motion.div className="hidden xl:block absolute right-0 -translate-x-4 -top-6" {...appear} transition={{ ...appear.transition, delay: 0.15 }}>
-              <div className="rounded-2xl border bg-white/90 backdrop-blur p-4 shadow-sm w-64">
+              <div className="rounded-2xl border bg-white p-4 shadow-sm w-64">
                 <p className="text-xs text-slate-500">Mobility diversity</p>
                 <p className="text-lg font-semibold">Moderate</p>
                 <div className="mt-2 h-10 bg-slate-100 rounded" />
               </div>
             </motion.div>
             <motion.div className="hidden xl:block absolute right-0 translate-x-6 -bottom-8" {...appear} transition={{ ...appear.transition, delay: 0.25 }}>
-              <div className="rounded-2xl border bg-white/90 backdrop-blur p-4 shadow-sm w-64">
+              <div className="rounded-2xl border bg-white p-4 shadow-sm w-64">
                 <p className="text-xs text-slate-500">Screen rhythm</p>
                 <p className="text-lg font-semibold">Regular</p>
                 <div className="mt-2 h-10 bg-slate-100 rounded" />
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* PROBLEM */}
       <section id="problem" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-6 py-16 grid md:grid-cols-3 gap-8">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16 grid md:grid-cols-3 gap-6 md:gap-8">
           <motion.div {...appear} className="md:col-span-1">
             <h2 className="text-2xl font-bold">Problem</h2>
             <p className="mt-3 text-slate-600">
@@ -353,7 +343,7 @@ export default function App() {
               inconsistent and hard to sustain.
             </p>
           </motion.div>
-          <div className="md:col-span-2 grid sm:grid-cols-2 gap-6">
+          <div className="md:col-span-2 grid sm:grid-cols-2 gap-4 md:gap-6">
             {[
               { title: "Delayed intervention", desc: "Symptoms are detected late, delaying care." },
               { title: "Low adherence", desc: "Users struggle to self-track consistently." },
@@ -371,7 +361,7 @@ export default function App() {
 
       {/* SOLUTION */}
       <section id="solution" className="border-t bg-slate-50">
-        <div className="mx-auto max-w-[96rem] px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16 grid md:grid-cols-2 gap-8 md:gap-10 items-center">
           <motion.div {...appear}>
             <h2 className="text-2xl font-bold">Solution</h2>
             <p className="mt-3 text-slate-700">
@@ -400,9 +390,9 @@ export default function App() {
 
       {/* METHODS */}
       <section id="methods" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-6 py-16">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
           <motion.h2 {...appear} className="text-2xl font-bold">Science & Methods</motion.h2>
-          <div className="mt-6 grid md:grid-cols-3 gap-6">
+          <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
             {[
               { t: "Smartphone analytics", d: "Lock/unlock & screen status rhythms, app usage, notifications, mobility regularity, entropy." },
               { t: "Wearables", d: "Heart rate, sleep, step count, activity intensity; circadian & variability features." },
@@ -419,9 +409,9 @@ export default function App() {
 
       {/* SENSORS */}
       <section id="sensors" className="border-t bg-slate-50">
-        <div className="mx-auto max-w-[96rem] px-6 py-16">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
           <motion.h2 {...appear} className="text-2xl font-bold">Sensors we leverage</motion.h2>
-          <div className="mt-6 grid md:grid-cols-3 gap-6">
+          <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
             {[
               { t: "Mobility & Activity", items: ["GPS/Wi-Fi/Bluetooth scans", "Pedometer/steps", "Gyroscope & accelerometer", "Activity intensity"] },
               { t: "Phone Usage", items: ["Lock/unlock & screen time", "App usage & notifications", "Running apps", "Call/SMS/email/social"] },
@@ -442,9 +432,9 @@ export default function App() {
 
       {/* PRIVACY */}
       <section id="privacy" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-6 py-16">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
           <motion.h2 {...appear} className="text-2xl font-bold">Privacy & Safety</motion.h2>
-          <div className="mt-4 grid md:grid-cols-2 gap-6">
+          <div className="mt-4 grid md:grid-cols-2 gap-4 md:gap-6">
             <Card className="p-5">
               <ul className="space-y-2 text-sm text-slate-700 list-disc pl-5">
                 <li>Raw data stays on the device.</li>
@@ -455,7 +445,7 @@ export default function App() {
             </Card>
             <Card className="p-5">
               <p className="text-sm text-slate-700">
-                Moodi is <em>not</em> a diagnostic tool. It offers early warnings and self-monitoring support; clinical decisions belong to healthcare professionals.
+                Scuba is <em>not</em> a diagnostic tool. It offers early warnings and self-monitoring support; clinical decisions belong to healthcare professionals.
               </p>
             </Card>
           </div>
@@ -464,26 +454,23 @@ export default function App() {
 
       {/* TEAM with photos */}
       <section id="team" className="border-t bg-slate-50">
-        <div className="mx-auto max-w-[96rem] px-6 py-16">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
           <motion.h2 {...appear} className="text-2xl font-bold">Team</motion.h2>
-          <div className="mt-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+          <div className="mt-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {team.map((p, i) => (
               <motion.div
                 key={i}
                 {...appear}
-                whileHover={{ y: -6, scale: 1.02, boxShadow: "0 12px 30px rgba(110,86,207,0.15)" }}
-                className="rounded-2xl border bg-white p-5 text-center"
+                whileHover={{ y: -4 }}
+                className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm"
               >
-               <div className="mx-auto h-24 w-24 rounded-full overflow-hidden border border-[#e5e7eb] shadow-sm">
-                <img
-                  src={p.photo}
-                  alt={p.n}
-                  className="h-full w-full object-cover"
-                />
-              </div>
+                <div className="mx-auto h-24 w-24 rounded-full overflow-hidden border border-slate-200 shadow-sm">
+                  <img src={p.photo} alt={p.n} className="h-full w-full object-cover" />
+                </div>
                 <h3 className="mt-3 font-semibold">{p.n}</h3>
-                <p className="text-xs text-slate-500">{p.id}</p>
-                <p className="text-sm text-slate-600 mt-0.5">{p.r}</p>
+                {/* Optional role fields guarded to avoid undefined */}
+                {p.id && <p className="text-xs text-slate-500">{p.id}</p>}
+                {p.r && <p className="text-sm text-slate-600 mt-0.5">{p.r}</p>}
               </motion.div>
             ))}
           </div>
@@ -492,7 +479,7 @@ export default function App() {
 
       {/* CONTACT */}
       <section id="contact" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-6 py-16 grid md:grid-cols-2 gap-8 items-center">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16 grid md:grid-cols-2 gap-6 md:gap-8 items-center">
           <motion.div {...appear}>
             <h2 className="text-2xl font-bold">Early Access & Demo</h2>
             <p className="mt-3 text-slate-700">
@@ -521,10 +508,10 @@ export default function App() {
 
       {/* FOOTER */}
       <footer className="border-t">
-        <div className="mx-auto max-w-[96rem] px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-600">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-600">
           <div className="flex items-center gap-2">
-            <LogoMoodi className="h-5 w-5" />
-            <span>© {new Date().getFullYear()} Moodi</span>
+            <LogoWellMood className="h-5 w-5" />
+            <span>© {new Date().getFullYear()} Scuba - Mental Health</span>
           </div>
           <div className="flex gap-4">
             <a href="#privacy" className="hover:text-slate-900">Privacy</a>
