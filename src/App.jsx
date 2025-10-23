@@ -1,4 +1,5 @@
 import { motion, useScroll } from "framer-motion";
+import infoPdf from "./assets/CS491_Project_Information_Form_Template.pdf";
 import { useRef, useMemo, useState, useEffect } from "react";
 import {
   SparklesIcon,
@@ -502,6 +503,11 @@ export default function App() {
               I’m interested
             </button>
             <p className="mt-2 text-xs text-slate-500">Button is a demo.</p>
+            <p className="mt-4 text-xs text-slate-500 italic">
+      “Scuba” is pronounced as <strong>/ˈsku ː bə/</strong> inspired by the idea of “diving deep” into mental well-being,
+    reflecting a calm, exploratory approach to understanding emotions beneath the surface.
+    </p>
+
           </Card>
         </div>
       </section>
@@ -516,8 +522,19 @@ export default function App() {
           <div className="flex gap-4">
             <a href="#privacy" className="hover:text-slate-900">Privacy</a>
             <a href="#contact" className="hover:text-slate-900">Contact</a>
+            <a href="https://github.com/mervegulec2/scuba-mental-health.git" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900">
+            GitHub</a>
+             <a
+            href={infoPdf}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-slate-900"
+          >
+           Reports
+          </a>
           </div>
         </div>
+        
       </footer>
     </div>
   );
