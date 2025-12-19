@@ -1,5 +1,4 @@
 import { motion, useScroll } from "framer-motion";
-import infoPdf from "./assets/CS491_Project_Information_Form_Template.pdf";
 import { useRef, useMemo, useState, useEffect } from "react";
 import {
   SparklesIcon,
@@ -8,7 +7,13 @@ import {
   ShieldCheckIcon,
   UsersIcon,
   EnvelopeIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
+
+/* ---------------------- Reports (PDF imports) ---------------------- */
+import reportInfoForm from "./assets/CS491_Project_Information_Form.pdf";
+import reportAnalysisReq from "./assets/T2507_Analysis_and_Requirement_Report.pdf";
+import reportSpecDoc from "./assets/T2507_Project_Specification_Document.pdf";
 
 /* ---------------------- Config ---------------------- */
 const navItems = [
@@ -17,6 +22,7 @@ const navItems = [
   { name: "Science", href: "#methods", Icon: BeakerIcon },
   { name: "Sensors", href: "#sensors", Icon: ShieldCheckIcon },
   { name: "Team", href: "#team", Icon: UsersIcon },
+  { name: "Reports", href: "#reports", Icon: DocumentTextIcon },
   { name: "Contact", href: "#contact", Icon: EnvelopeIcon },
 ];
 
@@ -28,17 +34,35 @@ const team = [
   { n: "Yiğit Koşum", photo: "/team/yigit.jpg" },
 ];
 
+const reports = [
+  {
+    title: "CS491 Project Information Form",
+    desc: "Official CS491 project information form.",
+    file: reportInfoForm,
+  },
+  {
+    title: "T2507 Analysis & Requirement Report",
+    desc: "Analysis and requirements documentation.",
+    file: reportAnalysisReq,
+  },
+  {
+    title: "T2507 Project Specification Document",
+    desc: "Project specification and scope details.",
+    file: reportSpecDoc,
+  },
+];
+
 /* ---------------------- Logo ---------------------- */
-function LogoWellMood({ className = "h-6 w-6" }) {
+function LogoScubaMind({ className = "h-6 w-6" }) {
   return (
     <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
       <defs>
-        <linearGradient id="mo_g" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="sm_g" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#6E56CF" />
           <stop offset="100%" stopColor="#8B5CF6" />
         </linearGradient>
       </defs>
-      <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#mo_g)" />
+      <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#sm_g)" />
       <path
         d="M12 36h8l3-10 6 20 5-14h6l4-8h8"
         fill="none"
@@ -67,18 +91,13 @@ function Card({ children, className = "" }) {
       initial={false}
       whileHover={{ y: -2 }}
       transition={{ ...appear.transition, duration: 0.3 }}
-      className={
-        [
-          // Solid background to avoid scroll-time glow, no backdrop-blur
-          "rounded-2xl bg-white",
-          // Modern subtle border + ring on hover
-          "border border-slate-200/80 shadow-sm",
-          "hover:shadow-md hover:border-slate-300",
-          // Smooth transitions
-          "transition-all",
-          className,
-        ].join(" ")
-      }
+      className={[
+        "rounded-2xl bg-white",
+        "border border-slate-200/80 shadow-sm",
+        "hover:shadow-md hover:border-slate-300",
+        "transition-all",
+        className,
+      ].join(" ")}
     >
       {children}
     </motion.div>
@@ -88,14 +107,17 @@ function Card({ children, className = "" }) {
 /* ---------------------- Particle Trail ---------------------- */
 function ParticleTrail() {
   const [trail, setTrail] = useState([]);
+
   useEffect(() => {
     const onMove = (e) => {
-      const x = e.clientX, y = e.clientY;
+      const x = e.clientX;
+      const y = e.clientY;
       setTrail((t) => [...t.slice(-18), { x, y, id: crypto.randomUUID() }]);
     };
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
+
   return (
     <div className="pointer-events-none fixed inset-0 -z-10">
       {trail.map((p, i) => (
@@ -124,10 +146,10 @@ function ParticleTrail() {
 
 /* ---------------------- Brand word animation ---------------------- */
 function AnimatedBrand() {
-  const letters = useMemo(() => "Scuba - Mental Health".split(""), []);
+  const letters = useMemo(() => "ScubaMind".split(""), []);
   return (
     <div className="flex items-center gap-2">
-      <LogoWellMood className="h-7 w-7" />
+      <LogoScubaMind className="h-7 w-7" />
       <div className="font-extrabold text-xl tracking-tight">
         {letters.map((ch, idx) => (
           <motion.span
@@ -147,7 +169,6 @@ function AnimatedBrand() {
 /* ---------------------- App ---------------------- */
 export default function App() {
   const heroRef = useRef(null);
-  // Keep scroll progress bar; remove mockup rotation & parallax per request
   const { scrollYProgress: globalProgress } = useScroll();
 
   return (
@@ -162,13 +183,12 @@ export default function App() {
       <ParticleTrail />
 
       {/* NAV */}
-      <header className="sticky top-0 z-50 bg-white/95 border-b">{/* removed backdrop-blur to avoid glow */}
+      <header className="sticky top-0 z-50 bg-white/95 border-b">
         <nav className="mx-auto max-w-[96rem] px-4 md:px-6 py-3 flex items-center justify-between">
           <a href="#home" className="flex items-center gap-2">
             <AnimatedBrand />
           </a>
 
-          {/* animated nav with icons */}
           <div className="hidden md:flex gap-6 text-sm text-slate-700">
             {navItems.map(({ name, href, Icon }) => (
               <motion.a
@@ -185,7 +205,6 @@ export default function App() {
             ))}
           </div>
 
-          {/* fixed readable CTA */}
           <a
             href="#contact"
             className="rounded-2xl px-4 py-2 text-white text-sm font-semibold shadow-md transition-all bg-gradient-to-r from-[#6E56CF] to-[#8B5CF6] hover:shadow-lg hover:scale-[1.03] active:scale-[0.99]"
@@ -198,12 +217,11 @@ export default function App() {
 
       {/* HERO */}
       <section id="home" ref={heroRef} className="relative overflow-hidden">
-        {/* toned-down animated blobs to prevent bright bleed through cards */}
         <motion.div className="absolute inset-0 -z-10 overflow-hidden">
           {[...Array(4)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-40 h-40 rounded-full opacity-15" /* removed heavy blur */
+              className="absolute w-40 h-40 rounded-full opacity-15"
               style={{
                 background: i % 2 ? "#6E56CF" : "#8B5CF6",
                 top: `${10 + i * 18}%`,
@@ -217,21 +235,32 @@ export default function App() {
         </motion.div>
 
         <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-20 grid lg:grid-cols-2 gap-10 md:gap-12 items-center min-h-[76vh]">
-          {/* Left */}
           <motion.div {...appear}>
             <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-slate-600 bg-white">
-              <LogoWellMood className="h-4 w-4" />
+              <LogoScubaMind className="h-4 w-4" />
               On-device & Privacy-first
             </div>
+
             <h1 className="mt-4 text-3xl md:text-5xl font-extrabold leading-tight">
-              On-device <span className="underline decoration-[#FFC857] underline-offset-4">Passive Sensing</span> for Mental Well-Being
+              On-device{" "}
+              <span className="underline decoration-[#FFC857] underline-offset-4">
+                Passive Sensing
+              </span>{" "}
+              for Mental Well-Being
             </h1>
+
             <p className="mt-5 text-base md:text-lg text-slate-600">
-              Scuba analyzes smartphone & wearable signals <strong>entirely on-device</strong> to estimate depression risk early, track
-              progression, and deliver micro-interventions, reminders, and habit streaks—without sending raw data to servers.
+              <strong>ScubaMind</strong> analyzes smartphone & wearable signals{" "}
+              <strong>entirely on-device</strong> to estimate depression risk early,
+              track progression, and deliver micro-interventions, reminders, and
+              habit streaks—without sending raw data to servers.
             </p>
+
             <div className="mt-6 flex flex-wrap gap-3">
-              <a className="rounded-2xl px-5 py-3 bg-[#0F172A] text-white font-semibold hover:opacity-90" href="#contact">
+              <a
+                className="rounded-2xl px-5 py-3 bg-[#0F172A] text-white font-semibold hover:opacity-90"
+                href="#contact"
+              >
                 Get Early Access
               </a>
               <a
@@ -241,19 +270,31 @@ export default function App() {
                 Privacy Principles
               </a>
             </div>
+
             <div className="mt-6 flex flex-wrap gap-2 text-xs text-slate-600">
-              {["On-device Analytics", "Clinician-ready Summaries", "Micro-interventions", "Habit Streaks"].map((t, i) => (
-                <span key={i} className="inline-flex items-center gap-1 rounded-full border px-3 py-1 hover:border-[#6E56CF]">
+              {[
+                "On-device Analytics",
+                "Clinician-ready Summaries",
+                "Micro-interventions",
+                "Habit Streaks",
+              ].map((t, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1 rounded-full border px-3 py-1 hover:border-[#6E56CF]"
+                >
                   {t}
                 </span>
               ))}
             </div>
           </motion.div>
 
-          {/* Right mockup (FIXED – no scroll rotate or parallax) */}
+          {/* Right mockup */}
           <div className="relative flex justify-end lg:-translate-x-10 xl:-translate-x-16 2xl:-translate-x-24">
             <div className="w-full max-w-[440px] rounded-[2rem] border bg-white shadow-xl">
-              <div className="h-8 rounded-t-[2rem] bg-slate-100 flex items-center justify-center text-[10px] text-slate-500">Scuba - Mental Health</div>
+              <div className="h-8 rounded-t-[2rem] bg-slate-100 flex items-center justify-center text-[10px] text-slate-500">
+                ScubaMind
+              </div>
+
               <div className="p-4 space-y-4">
                 <Card className="p-4">
                   <div className="flex items-center justify-between">
@@ -261,42 +302,73 @@ export default function App() {
                       <h3 className="font-semibold">Daily Risk</h3>
                       <p className="text-xs text-slate-500">Passive signals</p>
                     </div>
-                    <span className="text-xs rounded-full border px-2 py-0.5">7-day</span>
+                    <span className="text-xs rounded-full border px-2 py-0.5">
+                      7-day
+                    </span>
                   </div>
+
                   <div className="mt-3 h-24 rounded-lg bg-slate-100 flex items-end gap-1 p-2">
                     {[28, 58, 44, 76, 54, 64, 50].map((h, i) => (
-                      <div key={i} className="w-8 rounded-t" style={{ background: "linear-gradient(180deg,#6E56CF,#8B5CF6)", height: `${h}%` }} />
+                      <div
+                        key={i}
+                        className="w-8 rounded-t"
+                        style={{
+                          background:
+                            "linear-gradient(180deg,#6E56CF,#8B5CF6)",
+                          height: `${h}%`,
+                        }}
+                      />
                     ))}
                   </div>
                 </Card>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <motion.div {...appear} whileHover={{ scale: 1.02 }} className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
+                  <motion.div
+                    {...appear}
+                    whileHover={{ scale: 1.02 }}
+                    className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4"
+                  >
                     <h4 className="font-semibold">Micro-Intervention</h4>
                     <p className="text-xs text-slate-500">3-min breathing</p>
+
                     <motion.div
                       className="mt-3 rounded-lg border p-3"
                       animate={{ scale: [1, 1.03, 1] }}
-                      transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+                      transition={{
+                        duration: 3.2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
                     >
                       <div className="text-2xl font-extrabold">4–7–8</div>
-                      <p className="text-[11px] text-slate-500">Inhale 4 • Hold 7 • Exhale 8</p>
-                      <button className="mt-3 w-full rounded-lg bg-[#6E56CF] text-white py-2 text-xs font-semibold hover:opacity-90">Start</button>
+                      <p className="text-[11px] text-slate-500">
+                        Inhale 4 • Hold 7 • Exhale 8
+                      </p>
+                      <button className="mt-3 w-full rounded-lg bg-[#6E56CF] text-white py-2 text-xs font-semibold hover:opacity-90">
+                        Start
+                      </button>
                     </motion.div>
                   </motion.div>
 
                   <Card className="p-4">
                     <h4 className="font-semibold">Reminders</h4>
                     <p className="text-xs text-slate-500">Schedule & meds</p>
+
                     <div className="mt-3 flex flex-wrap gap-2">
                       {["Medication", "Therapy", "Walk"].map((t, i) => (
-                        <span key={i} className="text-[11px] rounded-full border px-3 py-1 hover:border-[#6E56CF]">
+                        <span
+                          key={i}
+                          className="text-[11px] rounded-full border px-3 py-1 hover:border-[#6E56CF]"
+                        >
                           {t}
                         </span>
                       ))}
                     </div>
+
                     <div className="mt-3 rounded-lg bg-slate-50 p-3">
-                      <p className="text-[11px] text-slate-600">Today • 18:00 — Evening walk</p>
+                      <p className="text-[11px] text-slate-600">
+                        Today • 18:00 — Evening walk
+                      </p>
                     </div>
                   </Card>
                 </div>
@@ -308,22 +380,34 @@ export default function App() {
                   </div>
                   <div className="flex -space-x-2">
                     {[...Array(4)].map((_, i) => (
-                      <div key={i} className="h-7 w-7 rounded-full bg-slate-200 border" />
+                      <div
+                        key={i}
+                        className="h-7 w-7 rounded-full bg-slate-200 border"
+                      />
                     ))}
                   </div>
                 </Card>
               </div>
             </div>
 
-            {/* floating stat cards */}
-            <motion.div className="hidden xl:block absolute right-0 -translate-x-4 -top-6" {...appear} transition={{ ...appear.transition, delay: 0.15 }}>
+            {/* floating cards */}
+            <motion.div
+              className="hidden xl:block absolute right-0 -translate-x-4 -top-6"
+              {...appear}
+              transition={{ ...appear.transition, delay: 0.15 }}
+            >
               <div className="rounded-2xl border bg-white p-4 shadow-sm w-64">
                 <p className="text-xs text-slate-500">Mobility diversity</p>
                 <p className="text-lg font-semibold">Moderate</p>
                 <div className="mt-2 h-10 bg-slate-100 rounded" />
               </div>
             </motion.div>
-            <motion.div className="hidden xl:block absolute right-0 translate-x-6 -bottom-8" {...appear} transition={{ ...appear.transition, delay: 0.25 }}>
+
+            <motion.div
+              className="hidden xl:block absolute right-0 translate-x-6 -bottom-8"
+              {...appear}
+              transition={{ ...appear.transition, delay: 0.25 }}
+            >
               <div className="rounded-2xl border bg-white p-4 shadow-sm w-64">
                 <p className="text-xs text-slate-500">Screen rhythm</p>
                 <p className="text-lg font-semibold">Regular</p>
@@ -340,10 +424,12 @@ export default function App() {
           <motion.div {...appear} className="md:col-span-1">
             <h2 className="text-2xl font-bold">Problem</h2>
             <p className="mt-3 text-slate-600">
-              Early recognition of depressive symptoms is difficult; clinical assessments often occur late. Day-to-day self-monitoring is
+              Early recognition of depressive symptoms is difficult; clinical
+              assessments often occur late. Day-to-day self-monitoring is
               inconsistent and hard to sustain.
             </p>
           </motion.div>
+
           <div className="md:col-span-2 grid sm:grid-cols-2 gap-4 md:gap-6">
             {[
               { title: "Delayed intervention", desc: "Symptoms are detected late, delaying care." },
@@ -366,8 +452,10 @@ export default function App() {
           <motion.div {...appear}>
             <h2 className="text-2xl font-bold">Solution</h2>
             <p className="mt-3 text-slate-700">
-              We combine multi-sensor signals (screen rhythm, app usage, mobility regularity, sleep, heart rate, activity) with a compact
-              on-device model to infer early risk, produce clinician-ready summaries, and deliver actionable micro-interventions.
+              We combine multi-sensor signals (screen rhythm, app usage, mobility
+              regularity, sleep, heart rate, activity) with a compact on-device
+              model to infer early risk, produce clinician-ready summaries, and
+              deliver actionable micro-interventions.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
               <li>On-device analytics — raw data never leaves the phone</li>
@@ -376,14 +464,28 @@ export default function App() {
               <li>Low-power collectors & batching</li>
             </ul>
           </motion.div>
+
           <Card className="p-6">
             <h3 className="font-semibold">Architecture (Overview)</h3>
             <ol className="mt-3 text-sm text-slate-700 space-y-2 list-decimal pl-5">
-              <li><strong>Collectors:</strong> UsageStats, Screen Events, Activity/HR, Location, Ambient</li>
-              <li><strong>Feature Layer:</strong> rhythms, variance, circadian regularity, mobility diversity, entropy</li>
-              <li><strong>On-device Model:</strong> compact classifier / risk score</li>
-              <li><strong>Assistant:</strong> micro-interventions, reminders, habit tracker</li>
-              <li><strong>Share:</strong> optional clinician PDF summary</li>
+              <li>
+                <strong>Collectors:</strong> UsageStats, Screen Events,
+                Activity/HR, Location, Ambient
+              </li>
+              <li>
+                <strong>Feature Layer:</strong> rhythms, variance, circadian
+                regularity, mobility diversity, entropy
+              </li>
+              <li>
+                <strong>On-device Model:</strong> compact classifier / risk score
+              </li>
+              <li>
+                <strong>Assistant:</strong> micro-interventions, reminders, habit
+                tracker
+              </li>
+              <li>
+                <strong>Share:</strong> optional clinician PDF summary
+              </li>
             </ol>
           </Card>
         </div>
@@ -392,12 +494,24 @@ export default function App() {
       {/* METHODS */}
       <section id="methods" className="border-t">
         <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">Science & Methods</motion.h2>
+          <motion.h2 {...appear} className="text-2xl font-bold">
+            Science & Methods
+          </motion.h2>
+
           <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
             {[
-              { t: "Smartphone analytics", d: "Lock/unlock & screen status rhythms, app usage, notifications, mobility regularity, entropy." },
-              { t: "Wearables", d: "Heart rate, sleep, step count, activity intensity; circadian & variability features." },
-              { t: "Speech (acoustics only)", d: "Prosody, pitch, energy trends for mood correlates (no content stored)." },
+              {
+                t: "Smartphone analytics",
+                d: "Lock/unlock & screen status rhythms, app usage, notifications, mobility regularity, entropy.",
+              },
+              {
+                t: "Wearables",
+                d: "Heart rate, sleep, step count, activity intensity; circadian & variability features.",
+              },
+              {
+                t: "Speech (acoustics only)",
+                d: "Prosody, pitch, energy trends for mood correlates (no content stored).",
+              },
             ].map((f, i) => (
               <Card key={i} className="p-5">
                 <h3 className="font-semibold">{f.t}</h3>
@@ -411,12 +525,39 @@ export default function App() {
       {/* SENSORS */}
       <section id="sensors" className="border-t bg-slate-50">
         <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">Sensors we leverage</motion.h2>
+          <motion.h2 {...appear} className="text-2xl font-bold">
+            Sensors we leverage
+          </motion.h2>
+
           <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
             {[
-              { t: "Mobility & Activity", items: ["GPS/Wi-Fi/Bluetooth scans", "Pedometer/steps", "Gyroscope & accelerometer", "Activity intensity"] },
-              { t: "Phone Usage", items: ["Lock/unlock & screen time", "App usage & notifications", "Running apps", "Call/SMS/email/social"] },
-              { t: "Ambient & Biometrics", items: ["Light/illuminance", "Microphone (level only)", "Battery & charging events", "Heart rate & sleep"] },
+              {
+                t: "Mobility & Activity",
+                items: [
+                  "GPS/Wi-Fi/Bluetooth scans",
+                  "Pedometer/steps",
+                  "Gyroscope & accelerometer",
+                  "Activity intensity",
+                ],
+              },
+              {
+                t: "Phone Usage",
+                items: [
+                  "Lock/unlock & screen time",
+                  "App usage & notifications",
+                  "Running apps",
+                  "Call/SMS/email/social",
+                ],
+              },
+              {
+                t: "Ambient & Biometrics",
+                items: [
+                  "Light/illuminance",
+                  "Microphone (level only)",
+                  "Battery & charging events",
+                  "Heart rate & sleep",
+                ],
+              },
             ].map((card, i) => (
               <Card key={i} className="p-5">
                 <h3 className="font-semibold">{card.t}</h3>
@@ -434,7 +575,10 @@ export default function App() {
       {/* PRIVACY */}
       <section id="privacy" className="border-t">
         <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">Privacy & Safety</motion.h2>
+          <motion.h2 {...appear} className="text-2xl font-bold">
+            Privacy & Safety
+          </motion.h2>
+
           <div className="mt-4 grid md:grid-cols-2 gap-4 md:gap-6">
             <Card className="p-5">
               <ul className="space-y-2 text-sm text-slate-700 list-disc pl-5">
@@ -444,19 +588,25 @@ export default function App() {
                 <li>Clear permissions and data-deletion controls.</li>
               </ul>
             </Card>
+
             <Card className="p-5">
               <p className="text-sm text-slate-700">
-                Scuba is <em>not</em> a diagnostic tool. It offers early warnings and self-monitoring support; clinical decisions belong to healthcare professionals.
+                ScubaMind is <em>not</em> a diagnostic tool. It offers early
+                warnings and self-monitoring support; clinical decisions belong
+                to healthcare professionals.
               </p>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* TEAM with photos */}
+      {/* TEAM */}
       <section id="team" className="border-t bg-slate-50">
         <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">Team</motion.h2>
+          <motion.h2 {...appear} className="text-2xl font-bold">
+            Team
+          </motion.h2>
+
           <div className="mt-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {team.map((p, i) => (
               <motion.div
@@ -466,13 +616,48 @@ export default function App() {
                 className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm"
               >
                 <div className="mx-auto h-24 w-24 rounded-full overflow-hidden border border-slate-200 shadow-sm">
-                  <img src={p.photo} alt={p.n} className="h-full w-full object-cover" />
+                  <img
+                    src={p.photo}
+                    alt={p.n}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
                 <h3 className="mt-3 font-semibold">{p.n}</h3>
-                {/* Optional role fields guarded to avoid undefined */}
-                {p.id && <p className="text-xs text-slate-500">{p.id}</p>}
-                {p.r && <p className="text-sm text-slate-600 mt-0.5">{p.r}</p>}
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* REPORTS */}
+      <section id="reports" className="border-t">
+        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
+          <motion.h2 {...appear} className="text-2xl font-bold">
+            Reports
+          </motion.h2>
+          <p className="mt-3 text-slate-600">
+            Project documents are listed below. Click to open any report as a PDF.
+          </p>
+
+          <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
+            {reports.map((r, i) => (
+              <Card key={i} className="p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="font-semibold">{r.title}</h3>
+                    <p className="mt-1 text-sm text-slate-600">{r.desc}</p>
+                  </div>
+
+                  <a
+                    href={r.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 rounded-xl border px-3 py-2 text-sm font-semibold text-[#6E56CF] hover:bg-[#6E56CF]/5"
+                  >
+                    Open PDF
+                  </a>
+                </div>
+              </Card>
             ))}
           </div>
         </div>
@@ -484,7 +669,8 @@ export default function App() {
           <motion.div {...appear}>
             <h2 className="text-2xl font-bold">Early Access & Demo</h2>
             <p className="mt-3 text-slate-700">
-              For academic collaboration, mentorship, or pilot studies, leave a note below. We only ask for brief contact details—no raw data needed.
+              For academic collaboration, mentorship, or pilot studies, leave a note
+              below. We only ask for brief contact details—no raw data needed.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
               <li>Sample clinician PDF summary</li>
@@ -492,22 +678,43 @@ export default function App() {
               <li>Architecture notes</li>
             </ul>
           </motion.div>
+
           <Card className="p-6">
             <label className="block text-sm font-medium">Name</label>
-            <input className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2" placeholder="Your name" />
+            <input
+              className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2"
+              placeholder="Your name"
+            />
+
             <label className="block text-sm font-medium mt-4">Email</label>
-            <input type="email" className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2" placeholder="you@university.edu" />
+            <input
+              type="email"
+              className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2"
+              placeholder="you@university.edu"
+            />
+
             <label className="block text-sm font-medium mt-4">Message</label>
-            <textarea rows={4} className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2" placeholder="Short message" />
-            <button type="button" className="mt-5 w-full rounded-2xl bg-[#6E56CF] text-white py-3 font-semibold hover:opacity-90">
+            <textarea
+              rows={4}
+              className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2"
+              placeholder="Short message"
+            />
+
+            <button
+              type="button"
+              className="mt-5 w-full rounded-2xl !bg-[#6E56CF] !text-white py-3 font-semibold hover:opacity-90"
+            >
               I’m interested
             </button>
-            <p className="mt-2 text-xs text-slate-500">Button is a demo.</p>
-            <p className="mt-4 text-xs text-slate-500 italic">
-      “Scuba” is pronounced as <strong>/ˈsku ː bə/</strong> inspired by the idea of “diving deep” into mental well-being,
-    reflecting a calm, exploratory approach to understanding emotions beneath the surface.
-    </p>
 
+            <p className="mt-2 text-xs text-slate-500">Button is a demo.</p>
+
+            <p className="mt-4 text-xs text-slate-500 italic">
+              “ScubaMind” is pronounced as{" "}
+              <strong>/ˈskuː.bə maɪnd/</strong> — inspired by the idea of “diving deep”
+              into mental well-being, reflecting a calm, exploratory approach to
+              understanding emotions beneath the surface.
+            </p>
           </Card>
         </div>
       </section>
@@ -516,25 +723,27 @@ export default function App() {
       <footer className="border-t">
         <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-600">
           <div className="flex items-center gap-2">
-            <LogoWellMood className="h-5 w-5" />
-            <span>© {new Date().getFullYear()} Scuba - Mental Health</span>
+            <LogoScubaMind className="h-5 w-5" />
+            <span>© {new Date().getFullYear()} ScubaMind</span>
           </div>
+
           <div className="flex gap-4">
-            <a href="#privacy" className="hover:text-slate-900">Privacy</a>
-            <a href="#contact" className="hover:text-slate-900">Contact</a>
-            <a href="https://github.com/mervegulec2/scuba-mental-health.git" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900">
-            GitHub</a>
-             <a
-            href={infoPdf}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-slate-900"
-          >
-           Reports
-          </a>
+            <a href="#privacy" className="hover:text-slate-900">
+              Privacy
+            </a>
+            <a href="#contact" className="hover:text-slate-900">
+              Contact
+            </a>
+            <a
+              href="https://github.com/yigitkosum/scubamind"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-slate-900"
+            >
+              GitHub
+            </a>
           </div>
         </div>
-        
       </footer>
     </div>
   );
