@@ -1,750 +1,406 @@
-import { motion, useScroll } from "framer-motion";
-import { useRef, useMemo, useState, useEffect } from "react";
 import {
-  SparklesIcon,
-  LightBulbIcon,
-  BeakerIcon,
-  ShieldCheckIcon,
-  UsersIcon,
   EnvelopeIcon,
-  DocumentTextIcon,
+  LockClosedIcon,
+  ShieldCheckIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
+  ChartBarIcon,
+  HeartIcon,
+  DevicePhoneMobileIcon,
+  BeakerIcon,
+  NoSymbolIcon,
 } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
 
-/* ---------------------- Reports (PDF imports) ---------------------- */
-import reportInfoForm from "./assets/CS491_Project_Information_Form.pdf";
-import reportAnalysisReq from "./assets/T2507_Analysis_and_Requirement_Report.pdf";
-import reportSpecDoc from "./assets/T2507_Project_Specification_Document.pdf";
-
-/* ---------------------- Config ---------------------- */
 const navItems = [
-  { name: "Problem", href: "#problem", Icon: LightBulbIcon },
-  { name: "Solution", href: "#solution", Icon: SparklesIcon },
-  { name: "Science", href: "#methods", Icon: BeakerIcon },
-  { name: "Sensors", href: "#sensors", Icon: ShieldCheckIcon },
-  { name: "Team", href: "#team", Icon: UsersIcon },
-  { name: "Reports", href: "#reports", Icon: DocumentTextIcon },
-  { name: "Contact", href: "#contact", Icon: EnvelopeIcon },
+  { name: "Home", href: "#home", id: "home" },
+  { name: "Problem", href: "#problem" },
+  { name: "Solution", href: "#solution" },
+  { name: "Science", href: "#science" },
 ];
 
-const team = [
-  { n: "Merve Güleç", photo: "/team/merve.jpg" },
-  { n: "Metin Çalışkan", photo: "/team/metin.jpg" },
-  { n: "Muhammed Fatih Başal", photo: "/team/fatih.jpg" },
-  { n: "Murathan Işık", photo: "/team/murathan.jpg" },
-  { n: "Yiğit Koşum", photo: "/team/yigit.jpg" },
-];
-
-const reports = [
-  {
-    title: "CS491 Project Information Form",
-    desc: "Official CS491 project information form.",
-    file: reportInfoForm,
-  },
-  {
-    title: "T2507 Analysis & Requirement Report",
-    desc: "Analysis and requirements documentation.",
-    file: reportAnalysisReq,
-  },
-  {
-    title: "T2507 Project Specification Document",
-    desc: "Project specification and scope details.",
-    file: reportSpecDoc,
-  },
-];
-
-/* ---------------------- Logo ---------------------- */
-function LogoScubaMind({ className = "h-6 w-6" }) {
+function Logo({ className = "h-8 w-8" }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
-      <defs>
-        <linearGradient id="sm_g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#6E56CF" />
-          <stop offset="100%" stopColor="#8B5CF6" />
-        </linearGradient>
-      </defs>
-      <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#sm_g)" />
-      <path
-        d="M12 36h8l3-10 6 20 5-14h6l4-8h8"
-        fill="none"
-        stroke="white"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx="18" cy="22" r="3" fill="#FFC857" />
-    </svg>
+    <div
+      className={[
+        "grid place-items-center rounded-2xl",
+        "bg-[#0ea5e9] text-white",
+        "shadow-sm",
+        className,
+      ].join(" ")}
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none">
+        <path
+          d="M3 13h4l2-5 4 10 3-7h4l2-3h2"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </div>
   );
 }
 
-/* ---------------------- Motion helpers ---------------------- */
-const appear = {
-  initial: { opacity: 0, y: 24 },
-  whileInView: { opacity: 1, y: 0 },
-  transition: { duration: 0.6, ease: "easeOut" },
-  viewport: { once: true, margin: "-80px" },
-};
-
-/* ---------------------- Card (modern frame) ---------------------- */
-function Card({ children, className = "" }) {
+function Pill({ children, className = "" }) {
   return (
-    <motion.div
-      initial={false}
-      whileHover={{ y: -2 }}
-      transition={{ ...appear.transition, duration: 0.3 }}
+    <span
       className={[
-        "rounded-2xl bg-white",
-        "border border-slate-200/80 shadow-sm",
-        "hover:shadow-md hover:border-slate-300",
-        "transition-all",
+        "inline-flex items-center gap-2 rounded-full",
+        "px-3 py-1 text-xs font-medium",
+        "border border-black/10 bg-white/80 text-slate-700",
+        "backdrop-blur",
         className,
       ].join(" ")}
     >
       {children}
-    </motion.div>
+    </span>
   );
 }
 
-/* ---------------------- Particle Trail ---------------------- */
-function ParticleTrail() {
-  const [trail, setTrail] = useState([]);
+function Card({ children, className = "" }) {
+  return (
+    <div className={["rounded-2xl bg-white sm-card", className].join(" ")}>
+      {children}
+    </div>
+  );
+}
+
+export default function App() {
+  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
-    const onMove = (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      setTrail((t) => [...t.slice(-18), { x, y, id: crypto.randomUUID() }]);
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    const ids = ["home", "problem", "solution", "science"];
+    const els = ids
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    if (els.length === 0) return;
+
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => (b.intersectionRatio ?? 0) - (a.intersectionRatio ?? 0));
+        if (visible[0]?.target?.id) setActiveSection(visible[0].target.id);
+      },
+      {
+        root: null,
+        threshold: [0.25, 0.35, 0.5, 0.65],
+      }
+    );
+
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
   }, []);
 
   return (
-    <div className="pointer-events-none fixed inset-0 -z-10">
-      {trail.map((p, i) => (
-        <motion.span
-          key={p.id}
-          className="absolute block rounded-full"
-          style={{
-            left: p.x - 8,
-            top: p.y - 8,
-            width: 16 + i * 0.6,
-            height: 16 + i * 0.6,
-            background:
-              i % 2 === 0
-                ? "radial-gradient(circle, #6E56CF33, transparent 60%)"
-                : "radial-gradient(circle, #8B5CF633, transparent 60%)",
-            filter: "blur(2px)",
-          }}
-          initial={{ opacity: 0.25, scale: 0.9 }}
-          animate={{ opacity: 0, scale: 1.4, y: -6 }}
-          transition={{ duration: 0.8 }}
-        />
-      ))}
-    </div>
-  );
-}
+    <div className="min-h-screen bg-white">
+      {/* Top nav (screenshot style) */}
+      <header className="fixed top-0 left-0 right-0 z-50">
+        <div className="mx-auto max-w-7xl px-4 md:px-6 py-3">
+          <div className="flex items-center justify-between rounded-2xl bg-white/80 backdrop-blur border border-black/5 shadow-sm px-3 md:px-4 py-2">
+            <a href="#home" className="flex items-center gap-2">
+              <img
+                src="/landing/brand-icon.png"
+                alt=""
+                className="h-9 w-9 rounded-2xl object-contain"
+                loading="eager"
+                decoding="async"
+              />
+              <span className="text-lg font-extrabold tracking-tight">
+                ScubaMind
+              </span>
+            </a>
 
-/* ---------------------- Brand word animation ---------------------- */
-function AnimatedBrand() {
-  const letters = useMemo(() => "ScubaMind".split(""), []);
-  return (
-    <div className="flex items-center gap-2">
-      <LogoScubaMind className="h-7 w-7" />
-      <div className="font-extrabold text-xl tracking-tight">
-        {letters.map((ch, idx) => (
-          <motion.span
-            key={idx}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 * idx, duration: 0.35 }}
-          >
-            {ch}
-          </motion.span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ---------------------- App ---------------------- */
-export default function App() {
-  const heroRef = useRef(null);
-  const { scrollYProgress: globalProgress } = useScroll();
-
-  return (
-    <div className="min-h-screen bg-white text-slate-900">
-      {/* Scroll progress bar */}
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#6E56CF] to-[#8B5CF6] origin-left z-[60]"
-        style={{ scaleX: globalProgress }}
-      />
-
-      {/* mouse particle trail */}
-      <ParticleTrail />
-
-      {/* NAV */}
-      <header className="sticky top-0 z-50 bg-white/95 border-b">
-        <nav className="mx-auto max-w-[96rem] px-4 md:px-6 py-3 flex items-center justify-between">
-          <a href="#home" className="flex items-center gap-2">
-            <AnimatedBrand />
-          </a>
-
-          <div className="hidden md:flex gap-6 text-sm text-slate-700">
-            {navItems.map(({ name, href, Icon }) => (
-              <motion.a
-                key={name}
-                href={href}
-                className="flex items-center gap-1.5 hover:text-[#6E56CF] relative group"
-                whileHover={{ scale: 1.04 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <Icon className="h-4 w-4 opacity-70 group-hover:opacity-100" />
-                {name}
-                <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-gradient-to-r from-[#6E56CF] to-[#8B5CF6] origin-left scale-x-0 group-hover:scale-x-100 transition-transform" />
-              </motion.a>
-            ))}
+            <nav className="hidden lg:flex items-center gap-1 rounded-full bg-slate-900/5 p-1">
+              {[
+                { name: "Home", href: "#home", id: "home" },
+                { name: "Problem", href: "#problem", id: "problem" },
+                { name: "Solution", href: "#solution", id: "solution" },
+                { name: "Science", href: "#science", id: "science" },
+              ].map((i) => (
+                <a
+                  key={i.name}
+                  href={i.href}
+                  className={[
+                    "px-3 py-1.5 rounded-full text-sm font-semibold transition-all",
+                    activeSection === i.id
+                      ? "bg-white text-slate-900 shadow-sm"
+                      : "text-slate-700 hover:text-slate-900 hover:bg-white/60",
+                  ].join(" ")}
+                >
+                  {i.name}
+                </a>
+              ))}
+            </nav>
           </div>
-
-          <a
-            href="#contact"
-            className="rounded-2xl px-4 py-2 text-white text-sm font-semibold shadow-md transition-all bg-gradient-to-r from-[#6E56CF] to-[#8B5CF6] hover:shadow-lg hover:scale-[1.03] active:scale-[0.99]"
-            style={{ WebkitTextFillColor: "#fff" }}
-          >
-            Request Demo
-          </a>
-        </nav>
+        </div>
       </header>
 
       {/* HERO */}
-      <section id="home" ref={heroRef} className="relative overflow-hidden">
-        <motion.div className="absolute inset-0 -z-10 overflow-hidden">
-          {[...Array(4)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-40 h-40 rounded-full opacity-15"
-              style={{
-                background: i % 2 ? "#6E56CF" : "#8B5CF6",
-                top: `${10 + i * 18}%`,
-                left: `${8 + (i * 22) % 70}%`,
-                filter: "blur(24px)",
-              }}
-              animate={{ scale: [1, 1.15, 1], opacity: [0.12, 0.2, 0.12] }}
-              transition={{ duration: 10 + i, repeat: Infinity, ease: "easeInOut" }}
-            />
-          ))}
-        </motion.div>
+      <section
+        id="home"
+        className="sm-hero-bg sm-snap-section min-h-screen pt-16 overflow-hidden"
+      >
+        <div className="mx-auto max-w-7xl w-full px-4 md:px-6 py-14 md:py-16">
+          <div className="min-h-[calc(100vh-64px)] flex items-center">
+            <div className="-translate-y-20 md:-translate-y-24 w-full">
+              <div className="grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] gap-10 lg:gap-14 items-stretch">
+                {/* Left column: top aligned to video top, bottom aligned to video bottom */}
+                <div className="flex flex-col h-full">
+                  <div>
+                    <h1 className="mt-0 text-[40px] md:text-[52px] xl:text-[56px] font-extrabold leading-[1.04] tracking-tight text-slate-900">
+                      See how ScubaMind
+                      <br />
+                      supports mental
+                      <br />
+                      well-being<span className="text-emerald-500">.</span>
+                    </h1>
 
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-20 grid lg:grid-cols-2 gap-10 md:gap-12 items-center min-h-[76vh]">
-          <motion.div {...appear}>
-            <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-slate-600 bg-white">
-              <LogoScubaMind className="h-4 w-4" />
-              On-device & Privacy-first
-            </div>
-
-            <h1 className="mt-4 text-3xl md:text-5xl font-extrabold leading-tight">
-              On-device{" "}
-              <span className="underline decoration-[#FFC857] underline-offset-4">
-                Passive Sensing
-              </span>{" "}
-              for Mental Well-Being
-            </h1>
-
-            <p className="mt-5 text-base md:text-lg text-slate-600">
-              <strong>ScubaMind</strong> analyzes smartphone & wearable signals{" "}
-              <strong>entirely on-device</strong> to estimate depression risk early,
-              track progression, and deliver micro-interventions, reminders, and
-              habit streaks—without sending raw data to servers.
-            </p>
-
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                className="rounded-2xl px-5 py-3 bg-[#0F172A] text-white font-semibold hover:opacity-90"
-                href="#contact"
-              >
-                Get Early Access
-              </a>
-              <a
-                className="rounded-2xl px-5 py-3 border border-[#6E56CF]/30 text-[#6E56CF] font-semibold hover:bg-[#6E56CF]/5"
-                href="#privacy"
-              >
-                Privacy Principles
-              </a>
-            </div>
-
-            <div className="mt-6 flex flex-wrap gap-2 text-xs text-slate-600">
-              {[
-                "On-device Analytics",
-                "Clinician-ready Summaries",
-                "Micro-interventions",
-                "Habit Streaks",
-              ].map((t, i) => (
-                <span
-                  key={i}
-                  className="inline-flex items-center gap-1 rounded-full border px-3 py-1 hover:border-[#6E56CF]"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Right mockup */}
-          <div className="relative flex justify-end lg:-translate-x-10 xl:-translate-x-16 2xl:-translate-x-24">
-            <div className="w-full max-w-[440px] rounded-[2rem] border bg-white shadow-xl">
-              <div className="h-8 rounded-t-[2rem] bg-slate-100 flex items-center justify-center text-[10px] text-slate-500">
-                ScubaMind
-              </div>
-
-              <div className="p-4 space-y-4">
-                <Card className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold">Daily Risk</h3>
-                      <p className="text-xs text-slate-500">Passive signals</p>
-                    </div>
-                    <span className="text-xs rounded-full border px-2 py-0.5">
-                      7-day
-                    </span>
+                    <p className="mt-5 text-[15px] md:text-base text-slate-600 max-w-[520px] leading-relaxed">
+                      On-device passive sensing, privacy-first design, and timely
+                      support—working together to detect risk early, track progress,
+                      and help you feel better, without sending your data anywhere.
+                    </p>
                   </div>
 
-                  <div className="mt-3 h-24 rounded-lg bg-slate-100 flex items-end gap-1 p-2">
-                    {[28, 58, 44, 76, 54, 64, 50].map((h, i) => (
-                      <div
-                        key={i}
-                        className="w-8 rounded-t"
-                        style={{
-                          background:
-                            "linear-gradient(180deg,#6E56CF,#8B5CF6)",
-                          height: `${h}%`,
-                        }}
-                      />
-                    ))}
+                  <div className="mt-auto flex flex-wrap gap-x-8 gap-y-4 text-[11px]">
+                    <div className="flex items-start gap-2">
+                      <ShieldCheckIcon className="h-4 w-4 text-emerald-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold text-emerald-700">
+                          100% On-device
+                        </div>
+                        <div className="text-slate-600 leading-snug">
+                          No raw data leaves
+                          <br />
+                          your device.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2">
+                      <LockClosedIcon className="h-4 w-4 text-emerald-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold text-emerald-700">
+                          Privacy First
+                        </div>
+                        <div className="text-slate-600 leading-snug">
+                          Your data stays
+                          <br />
+                          yours, always.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2">
+                      <HeartIcon className="h-4 w-4 text-emerald-600 mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-bold text-emerald-700">
+                          Timely Support
+                        </div>
+                        <div className="text-slate-600 leading-snug">
+                          Insights and care
+                          <br />
+                          when it matters.
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </Card>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <motion.div
-                    {...appear}
-                    whileHover={{ scale: 1.02 }}
-                    className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4"
-                  >
-                    <h4 className="font-semibold">Micro-Intervention</h4>
-                    <p className="text-xs text-slate-500">3-min breathing</p>
-
-                    <motion.div
-                      className="mt-3 rounded-lg border p-3"
-                      animate={{ scale: [1, 1.03, 1] }}
-                      transition={{
-                        duration: 3.2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                    >
-                      <div className="text-2xl font-extrabold">4–7–8</div>
-                      <p className="text-[11px] text-slate-500">
-                        Inhale 4 • Hold 7 • Exhale 8
-                      </p>
-                      <button className="mt-3 w-full rounded-lg bg-[#6E56CF] text-white py-2 text-xs font-semibold hover:opacity-90">
-                        Start
-                      </button>
-                    </motion.div>
-                  </motion.div>
-
-                  <Card className="p-4">
-                    <h4 className="font-semibold">Reminders</h4>
-                    <p className="text-xs text-slate-500">Schedule & meds</p>
-
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {["Medication", "Therapy", "Walk"].map((t, i) => (
-                        <span
-                          key={i}
-                          className="text-[11px] rounded-full border px-3 py-1 hover:border-[#6E56CF]"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="mt-3 rounded-lg bg-slate-50 p-3">
-                      <p className="text-[11px] text-slate-600">
-                        Today • 18:00 — Evening walk
-                      </p>
-                    </div>
-                  </Card>
                 </div>
 
-                <Card className="p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs text-slate-500">Weekly trend</p>
-                    <p className="font-semibold">Stable ↗︎</p>
-                  </div>
-                  <div className="flex -space-x-2">
-                    {[...Array(4)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-7 w-7 rounded-full bg-slate-200 border"
+                {/* Right column: 16:9 video */}
+                <div id="watch" className="relative">
+                  <div className="rounded-2xl overflow-hidden border border-black/10 bg-white shadow-2xl">
+                    <div className="relative aspect-video bg-black/10">
+                      <img
+                        src="/landing/trailer-poster.png"
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="eager"
+                        decoding="async"
                       />
-                    ))}
+                    </div>
                   </div>
-                </Card>
+                </div>
               </div>
             </div>
-
-            {/* floating cards */}
-            <motion.div
-              className="hidden xl:block absolute right-0 -translate-x-4 -top-6"
-              {...appear}
-              transition={{ ...appear.transition, delay: 0.15 }}
-            >
-              <div className="rounded-2xl border bg-white p-4 shadow-sm w-64">
-                <p className="text-xs text-slate-500">Mobility diversity</p>
-                <p className="text-lg font-semibold">Moderate</p>
-                <div className="mt-2 h-10 bg-slate-100 rounded" />
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="hidden xl:block absolute right-0 translate-x-6 -bottom-8"
-              {...appear}
-              transition={{ ...appear.transition, delay: 0.25 }}
-            >
-              <div className="rounded-2xl border bg-white p-4 shadow-sm w-64">
-                <p className="text-xs text-slate-500">Screen rhythm</p>
-                <p className="text-lg font-semibold">Regular</p>
-                <div className="mt-2 h-10 bg-slate-100 rounded" />
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* PROBLEM */}
-      <section id="problem" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16 grid md:grid-cols-3 gap-6 md:gap-8">
-          <motion.div {...appear} className="md:col-span-1">
-            <h2 className="text-2xl font-bold">Problem</h2>
-            <p className="mt-3 text-slate-600">
-              Early recognition of depressive symptoms is difficult; clinical
-              assessments often occur late. Day-to-day self-monitoring is
-              inconsistent and hard to sustain.
+      {/* Challenge */}
+      <section
+        id="problem"
+        className="sm-challenge-bg sm-snap-section min-h-screen pt-16"
+      >
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
+          <div className="text-center">
+            <h2 className="mt-5 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+              Why early support is so hard
+            </h2>
+            <p className="mt-3 text-sm md:text-base text-slate-600 max-w-2xl mx-auto">
+              Depression risk often develops gradually, while traditional check-ins
+              are infrequent and self-tracking is hard to sustain.
             </p>
-          </motion.div>
-
-          <div className="md:col-span-2 grid sm:grid-cols-2 gap-4 md:gap-6">
-            {[
-              { title: "Delayed intervention", desc: "Symptoms are detected late, delaying care." },
-              { title: "Low adherence", desc: "Users struggle to self-track consistently." },
-              { title: "Fragmented signals", desc: "Behavioral data is noisy and hard to interpret." },
-              { title: "Privacy concerns", desc: "Sensitive data should not leave the phone." },
-            ].map((c, i) => (
-              <Card key={i} className="p-5">
-                <h3 className="font-semibold">{c.title}</h3>
-                <p className="mt-2 text-sm text-slate-600">{c.desc}</p>
-              </Card>
-            ))}
           </div>
-        </div>
-      </section>
 
-      {/* SOLUTION */}
-      <section id="solution" className="border-t bg-slate-50">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16 grid md:grid-cols-2 gap-8 md:gap-10 items-center">
-          <motion.div {...appear}>
-            <h2 className="text-2xl font-bold">Solution</h2>
-            <p className="mt-3 text-slate-700">
-              We combine multi-sensor signals (screen rhythm, app usage, mobility
-              regularity, sleep, heart rate, activity) with a compact on-device
-              model to infer early risk, produce clinician-ready summaries, and
-              deliver actionable micro-interventions.
-            </p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
-              <li>On-device analytics — raw data never leaves the phone</li>
-              <li>Opt-in, privacy-preserving PDF summaries</li>
-              <li>Trend tracking, goals, and streaks</li>
-              <li>Low-power collectors & batching</li>
-            </ul>
-          </motion.div>
-
-          <Card className="p-6">
-            <h3 className="font-semibold">Architecture (Overview)</h3>
-            <ol className="mt-3 text-sm text-slate-700 space-y-2 list-decimal pl-5">
-              <li>
-                <strong>Collectors:</strong> UsageStats, Screen Events,
-                Activity/HR, Location, Ambient
-              </li>
-              <li>
-                <strong>Feature Layer:</strong> rhythms, variance, circadian
-                regularity, mobility diversity, entropy
-              </li>
-              <li>
-                <strong>On-device Model:</strong> compact classifier / risk score
-              </li>
-              <li>
-                <strong>Assistant:</strong> micro-interventions, reminders, habit
-                tracker
-              </li>
-              <li>
-                <strong>Share:</strong> optional clinician PDF summary
-              </li>
-            </ol>
-          </Card>
-        </div>
-      </section>
-
-      {/* METHODS */}
-      <section id="methods" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">
-            Science & Methods
-          </motion.h2>
-
-          <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
-            {[
-              {
-                t: "Smartphone analytics",
-                d: "Lock/unlock & screen status rhythms, app usage, notifications, mobility regularity, entropy.",
-              },
-              {
-                t: "Wearables",
-                d: "Heart rate, sleep, step count, activity intensity; circadian & variability features.",
-              },
-              {
-                t: "Speech (acoustics only)",
-                d: "Prosody, pitch, energy trends for mood correlates (no content stored).",
-              },
-            ].map((f, i) => (
-              <Card key={i} className="p-5">
-                <h3 className="font-semibold">{f.t}</h3>
-                <p className="mt-1 text-sm text-slate-600">{f.d}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SENSORS */}
-      <section id="sensors" className="border-t bg-slate-50">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">
-            Sensors we leverage
-          </motion.h2>
-
-          <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
-            {[
-              {
-                t: "Mobility & Activity",
-                items: [
-                  "GPS/Wi-Fi/Bluetooth scans",
-                  "Pedometer/steps",
-                  "Gyroscope & accelerometer",
-                  "Activity intensity",
-                ],
-              },
-              {
-                t: "Phone Usage",
-                items: [
-                  "Lock/unlock & screen time",
-                  "App usage & notifications",
-                  "Running apps",
-                  "Call/SMS/email/social",
-                ],
-              },
-              {
-                t: "Ambient & Biometrics",
-                items: [
-                  "Light/illuminance",
-                  "Microphone (level only)",
-                  "Battery & charging events",
-                  "Heart rate & sleep",
-                ],
-              },
-            ].map((card, i) => (
-              <Card key={i} className="p-5">
-                <h3 className="font-semibold">{card.t}</h3>
-                <ul className="mt-2 text-sm text-slate-600 space-y-1 list-disc pl-5">
-                  {card.items.map((it, idx) => (
-                    <li key={idx}>{it}</li>
-                  ))}
-                </ul>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* PRIVACY */}
-      <section id="privacy" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">
-            Privacy & Safety
-          </motion.h2>
-
-          <div className="mt-4 grid md:grid-cols-2 gap-4 md:gap-6">
-            <Card className="p-5">
-              <ul className="space-y-2 text-sm text-slate-700 list-disc pl-5">
-                <li>Raw data stays on the device.</li>
-                <li>Sharing is opt-in and summarized.</li>
-                <li>Encrypted local storage + biometric lock.</li>
-                <li>Clear permissions and data-deletion controls.</li>
-              </ul>
-            </Card>
-
-            <Card className="p-5">
-              <p className="text-sm text-slate-700">
-                ScubaMind is <em>not</em> a diagnostic tool. It offers early
-                warnings and self-monitoring support; clinical decisions belong
-                to healthcare professionals.
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* TEAM */}
-      <section id="team" className="border-t bg-slate-50">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">
-            Team
-          </motion.h2>
-
-          <div className="mt-6 grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-            {team.map((p, i) => (
-              <motion.div
-                key={i}
-                {...appear}
-                whileHover={{ y: -4 }}
-                className="rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm"
-              >
-                <div className="mx-auto h-24 w-24 rounded-full overflow-hidden border border-slate-200 shadow-sm">
+          <div className="mt-10 grid md:grid-cols-3 gap-6">
+            <Card className="px-7 pt-5 pb-7 rounded-3xl bg-white/80 backdrop-blur">
+              <div className="text-center">
+                <div className="mx-auto h-34 w-34 grid place-items-center">
                   <img
-                    src={p.photo}
-                    alt={p.n}
-                    className="h-full w-full object-cover"
+                    src="/landing/icons/challenge-early-recognition.png"
+                    alt=""
+                    className="h-34 w-34 object-contain"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
-                <h3 className="mt-3 font-semibold">{p.n}</h3>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                <h3 className="mt-0 text-lg font-extrabold text-slate-900">
+                  Early recognition is difficult
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                  Changes in mood and behavior are subtle, personal, and easy to miss
+                  until symptoms become more severe.
+                </p>
+              </div>
+            </Card>
 
-      {/* REPORTS */}
-      <section id="reports" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16">
-          <motion.h2 {...appear} className="text-2xl font-bold">
-            Reports
-          </motion.h2>
-          <p className="mt-3 text-slate-600">
-            Project documents are listed below. Click to open any report as a PDF.
-          </p>
-
-          <div className="mt-6 grid md:grid-cols-3 gap-4 md:gap-6">
-            {reports.map((r, i) => (
-              <Card key={i} className="p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <h3 className="font-semibold">{r.title}</h3>
-                    <p className="mt-1 text-sm text-slate-600">{r.desc}</p>
-                  </div>
-
-                  <a
-                    href={r.file}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 rounded-xl border px-3 py-2 text-sm font-semibold text-[#6E56CF] hover:bg-[#6E56CF]/5"
-                  >
-                    Open PDF
-                  </a>
+            <Card className="px-7 pt-5 pb-7 rounded-3xl bg-white/80 backdrop-blur">
+              <div className="text-center">
+                <div className="mx-auto h-34 w-34 grid place-items-center">
+                  <img
+                    src="/landing/icons/challenge-intervention-late.png"
+                    alt=""
+                    className="h-34 w-34 object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
-              </Card>
-            ))}
+                <h3 className="mt-0 text-lg font-extrabold text-slate-900">
+                  Intervention often comes late
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                  Without continuous signals, support usually starts only after
+                  distress has already affected daily life.
+                </p>
+              </div>
+            </Card>
+
+            <Card className="px-7 pt-5 pb-7 rounded-3xl bg-white/80 backdrop-blur">
+              <div className="text-center">
+                <div className="mx-auto h-34 w-34 grid place-items-center">
+                  <img
+                    src="/landing/icons/challenge-manual-tracking.png"
+                    alt=""
+                    className="h-34 w-34 object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <h3 className="mt-0 text-lg font-extrabold text-slate-900">
+                  Manual tracking doesn’t stick
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                  People rarely maintain surveys or journals consistently, especially
+                  during difficult periods.
+                </p>
+              </div>
+            </Card>
+          </div>
+
+          <div className="mt-10 flex items-center justify-center gap-4 text-slate-900">
+            <img
+              src="/landing/icons/changes-sparkles-left.png"
+              alt=""
+              className="h-5 w-auto object-contain"
+              loading="lazy"
+              decoding="async"
+            />
+            <h3 className="text-base md:text-lg font-extrabold">
+              What ScubaMind changes
+            </h3>
+            <img
+              src="/landing/icons/changes-sparkles-right.png"
+              alt=""
+              className="h-5 w-auto object-contain"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+
+          <div className="mt-6 grid lg:grid-cols-[1fr_1fr_1fr_auto] gap-4 items-center">
+            <Card className="p-5 rounded-2xl bg-white/80 backdrop-blur">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/landing/icons/changes-passive-sensing.png"
+                  alt=""
+                  className="h-11 w-11 object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div>
+                  <div className="font-extrabold text-sm">Passive sensing</div>
+                  <div className="text-xs text-slate-600">
+                    Patterns are captured quietly from everyday device use.
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-5 rounded-2xl bg-white/80 backdrop-blur">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/landing/icons/changes-private-by-design.png"
+                  alt=""
+                  className="h-11 w-11 object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div>
+                  <div className="font-extrabold text-sm">Private by design</div>
+                  <div className="text-xs text-slate-600">
+                    Signals are processed on-device to protect privacy.
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-5 rounded-2xl bg-white/80 backdrop-blur">
+              <div className="flex items-center gap-3">
+                <img
+                  src="/landing/icons/changes-timely-support.png"
+                  alt=""
+                  className="h-11 w-11 object-contain"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div>
+                  <div className="font-extrabold text-sm">Timely support</div>
+                  <div className="text-xs text-slate-600">
+                    Insights can trigger earlier, gentler interventions.
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <div className="hidden lg:block" aria-hidden="true" />
           </div>
         </div>
       </section>
 
-      {/* CONTACT */}
-      <section id="contact" className="border-t">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-14 md:py-16 grid md:grid-cols-2 gap-6 md:gap-8 items-center">
-          <motion.div {...appear}>
-            <h2 className="text-2xl font-bold">Early Access & Demo</h2>
-            <p className="mt-3 text-slate-700">
-              For academic collaboration, mentorship, or pilot studies, leave a note
-              below. We only ask for brief contact details—no raw data needed.
-            </p>
-            <ul className="mt-4 space-y-2 text-sm text-slate-700 list-disc pl-5">
-              <li>Sample clinician PDF summary</li>
-              <li>Mockup screenshots</li>
-              <li>Architecture notes</li>
-            </ul>
-          </motion.div>
-
-          <Card className="p-6">
-            <label className="block text-sm font-medium">Name</label>
-            <input
-              className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2"
-              placeholder="Your name"
-            />
-
-            <label className="block text-sm font-medium mt-4">Email</label>
-            <input
-              type="email"
-              className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2"
-              placeholder="you@university.edu"
-            />
-
-            <label className="block text-sm font-medium mt-4">Message</label>
-            <textarea
-              rows={4}
-              className="mt-1 w-full rounded-xl border px-3 py-2 focus:outline-none focus:ring-2"
-              placeholder="Short message"
-            />
-
-            <button
-              type="button"
-              className="mt-5 w-full rounded-2xl !bg-[#6E56CF] !text-white py-3 font-semibold hover:opacity-90"
-            >
-              I’m interested
-            </button>
-
-            <p className="mt-2 text-xs text-slate-500">Button is a demo.</p>
-
-            <p className="mt-4 text-xs text-slate-500 italic">
-              “ScubaMind” is pronounced as{" "}
-              <strong>/ˈskuː.bə maɪnd/</strong> — inspired by the idea of “diving deep”
-              into mental well-being, reflecting a calm, exploratory approach to
-              understanding emotions beneath the surface.
-            </p>
-          </Card>
-        </div>
+      {/* Solution (next section) */}
+      <section id="solution" className="sm-solution-bg sm-snap-section min-h-screen pt-16">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16" />
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t">
-        <div className="mx-auto max-w-[96rem] px-4 md:px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-600">
-          <div className="flex items-center gap-2">
-            <LogoScubaMind className="h-5 w-5" />
-            <span>© {new Date().getFullYear()} ScubaMind</span>
-          </div>
-
-          <div className="flex gap-4">
-            <a href="#privacy" className="hover:text-slate-900">
-              Privacy
-            </a>
-            <a href="#contact" className="hover:text-slate-900">
-              Contact
-            </a>
-            <a
-              href="https://github.com/yigitkosum/scubamind"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-slate-900"
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
-      </footer>
+      {/* Science */}
+      <section id="science" className="sm-science-bg sm-snap-section min-h-screen pt-16">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16" />
+      </section>
     </div>
   );
 }

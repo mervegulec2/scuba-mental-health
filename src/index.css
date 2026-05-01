@@ -1,73 +1,100 @@
-/* src/index.css */
 @import "tailwindcss";
 
-
-
+/* App-wide base resets / theme */
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+html,
+body {
+  height: 100%;
 }
-a:hover {
-  color: #535bf2;
+
+/* Section-by-section scroll snapping */
+html {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scroll-padding-top: 0;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  background: #ffffff;
+  color: #0f172a;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#root {
+  min-height: 100%;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.sm-snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  scroll-margin-top: 0;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+/* Design tokens (match screenshot) */
+:root {
+  --sm-indigo: #6e56cf;
+  --sm-violet: #8b5cf6;
+  --sm-ink: #0f172a;
+  --sm-muted: #475569;
+  --sm-border: rgba(15, 23, 42, 0.12);
+  --sm-header-h: 64px;
+}
+
+/* Background helpers.
+   Hero supports a full-bleed background image when /landing/hero-bg.* is provided.
+   Until then it stays plain white. */
+.sm-hero-bg {
+  background: #ffffff;
+  background-image: url("/landing/hero-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sm-section-waves {
+  background: #ffffff;
+}
+
+.sm-challenge-bg {
+  background: #ffffff;
+  /* 2. section background image */
+  background-image: url("/landing/challenge-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sm-solution-bg {
+  background: #ffffff;
+  /* 3. section background image */
+  background-image: url("/landing/solution-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sm-science-bg {
+  background: #ffffff;
+  /* 4. section background image */
+  background-image: url("/landing/science-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sm-cta-bg {
+  background: #ffffff;
+}
+
+.sm-card {
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.07);
 }
