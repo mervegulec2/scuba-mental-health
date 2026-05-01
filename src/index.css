@@ -33,6 +33,7 @@ body {
   min-width: 320px;
   background: #ffffff;
   color: #0f172a;
+  overflow-x: hidden;
 }
 
 #root {
@@ -81,8 +82,8 @@ body {
 
 .sm-solution-bg {
   background: #ffffff;
-  /* 3. section background image */
-  background-image: url("/landing/solution-bg.png");
+  /* 3. section background image (component-based layout) */
+  background-image: url("/landing/solution/solution_background.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -91,9 +92,20 @@ body {
 .sm-science-bg {
   background: #ffffff;
   /* 4. section background image */
-  background-image: url("/landing/science-bg.png");
+  background-image: url("/landing/science_background.png");
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sm-docs-bg {
+  background: #ffffff;
+  background-image:
+    radial-gradient(900px 500px at 20% 10%, rgba(14, 165, 233, 0.12), transparent 60%),
+    radial-gradient(900px 500px at 80% 20%, rgba(16, 185, 129, 0.10), transparent 60%),
+    url("/landing/hero-bg.png");
+  background-size: auto, auto, cover;
+  background-position: left top, right top, center;
   background-repeat: no-repeat;
 }
 
@@ -117,4 +129,18 @@ body {
 .sm-card {
   border: 1px solid rgba(15, 23, 42, 0.10);
   box-shadow: 0 10px 30px rgba(2, 6, 23, 0.07);
+}
+
+/* Simple line clamping utilities (avoid extra plugins). */
+.sm-clamp-2,
+.sm-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sm-clamp-2 {
+  -webkit-line-clamp: 2;
+}
+.sm-clamp-3 {
+  -webkit-line-clamp: 3;
 }

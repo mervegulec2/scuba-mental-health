@@ -11,6 +11,8 @@ import {
   NoSymbolIcon,
   Bars3Icon,
   XMarkIcon,
+  UserGroupIcon,
+  DocumentTextIcon,
 } from "@heroicons/react/24/outline";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -407,6 +409,10 @@ export default function App() {
       >
         <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
           <MotionBlock className="text-center">
+            <Pill className="mx-auto w-fit">
+              <ExclamationTriangleIcon className="h-4 w-4" />
+              Problem
+            </Pill>
             <h2 className="mt-5 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
               Why early support is so hard
             </h2>
@@ -590,19 +596,427 @@ export default function App() {
 
       {/* Solution (next section) */}
       <section id="solution" className="sm-solution-bg sm-snap-section min-h-screen pt-16">
-        <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16" />
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-6 sm:py-8 md:py-10">
+          <div className="min-h-[calc(100vh-64px)] flex flex-col">
+            <MotionBlock className="text-center">
+            <Pill className="mx-auto w-fit">
+              <ChartBarIcon className="h-4 w-4" />
+              Solution
+            </Pill>
+            <h2 className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+              How ScubaMind works
+            </h2>
+            <p className="mt-2 text-sm md:text-base text-slate-600 max-w-2xl mx-auto">
+              Three simple steps that turn passive signals into helpful, privacy-first
+              support.
+            </p>
+            </MotionBlock>
+
+            <motion.div
+              className="mt-6 grid gap-4 sm:gap-5 lg:gap-6 items-start max-w-6xl mx-auto lg:grid-cols-[1fr_auto_1fr_auto_1fr]"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.25 }}
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+                },
+              }}
+            >
+            <motion.div
+              className="self-start"
+              variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Card className="p-5 rounded-3xl bg-white/85 backdrop-blur text-left max-w-[390px] mx-auto">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-2xl bg-white border border-black/10 grid place-items-center font-extrabold text-slate-900 shadow-sm text-base">
+                    1
+                  </div>
+                </div>
+                <div className="mt-4 rounded-2xl overflow-hidden border border-black/10 bg-white">
+                  <img
+                    src="/landing/solution/solution1.png"
+                    alt=""
+                    className="w-full h-[190px] object-contain bg-white"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <h3 className="mt-4 font-extrabold text-slate-900 leading-snug">
+                  Passive sensing on your device
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                  We analyze patterns from your phone and wearables—movement, screen
+                  use, sleep, and more—entirely on-device.
+                </p>
+              </Card>
+            </motion.div>
+
+            <div
+              className="hidden lg:flex items-center justify-center self-center"
+              aria-hidden="true"
+            >
+              <div className="h-11 w-11 rounded-full bg-white/80 border border-black/10 backdrop-blur grid place-items-center text-slate-700 shadow-sm">
+                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none">
+                  <path
+                    d="M5 12h12m0 0-5-5m5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <motion.div
+              className="self-start"
+              variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Card className="p-5 rounded-3xl bg-white/85 backdrop-blur text-left max-w-[390px] mx-auto">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-2xl bg-white border border-black/10 grid place-items-center font-extrabold text-slate-900 shadow-sm text-base">
+                    2
+                  </div>
+                </div>
+                <div className="mt-4 rounded-2xl overflow-hidden border border-black/10 bg-white">
+                  <img
+                    src="/landing/solution/solution2.png"
+                    alt=""
+                    className="w-full h-[190px] object-contain bg-white"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <h3 className="mt-4 font-extrabold text-slate-900 leading-snug">
+                  Smart insights, just for you
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                  Risk estimates, trends, and summaries help you understand your
+                  well-being over time.
+                </p>
+              </Card>
+            </motion.div>
+
+            <div
+              className="hidden lg:flex items-center justify-center self-center"
+              aria-hidden="true"
+            >
+              <div className="h-11 w-11 rounded-full bg-white/80 border border-black/10 backdrop-blur grid place-items-center text-slate-700 shadow-sm">
+                <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none">
+                  <path
+                    d="M5 12h12m0 0-5-5m5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <motion.div
+              className="self-start"
+              variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Card className="p-5 rounded-3xl bg-white/85 backdrop-blur text-left max-w-[390px] mx-auto">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-2xl bg-white border border-black/10 grid place-items-center font-extrabold text-slate-900 shadow-sm text-base">
+                    3
+                  </div>
+                </div>
+                <div className="mt-4 rounded-2xl overflow-hidden border border-black/10 bg-white">
+                  <img
+                    src="/landing/solution/solution3.png"
+                    alt=""
+                    className="w-full h-[190px] object-contain bg-white"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <h3 className="mt-4 font-extrabold text-slate-900 leading-snug">
+                  Timely support that fits your life
+                </h3>
+                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                  Micro-interventions, reminders, and habit streaks help you take
+                  small steps that add up.
+                </p>
+              </Card>
+            </motion.div>
+            </motion.div>
+
+            <MotionBlock
+              delay={0.05}
+              className="mt-5 md:mt-4 lg:mt-4"
+            >
+              <Card className="rounded-3xl bg-white/75 backdrop-blur max-w-5xl mx-auto overflow-hidden">
+                <div className="grid md:grid-cols-3 text-left divide-y md:divide-y-0 md:divide-x divide-black/10">
+                  <div className="flex items-start gap-3 px-5 py-4">
+                    <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                      <img
+                        src="/landing/icons/icon1.png"
+                        alt=""
+                        className="h-7 w-7 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">
+                        On-device
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        No raw data leaves your device.
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 px-5 py-4">
+                    <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                      <img
+                        src="/landing/icons/icon2.png"
+                        alt=""
+                        className="h-7 w-7 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">
+                        Private by design
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        Signals are processed entirely on-device.
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 px-5 py-4">
+                    <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                      <img
+                        src="/landing/icons/icon3.png"
+                        alt=""
+                        className="h-7 w-7 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">
+                        Gentle support
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        Insights and care arrive when they’re most helpful.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </MotionBlock>
+          </div>
+        </div>
       </section>
 
       {/* Science */}
       <section id="science" className="sm-science-bg sm-snap-section min-h-screen pt-16">
-        <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16" />
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-6 sm:py-8 md:py-10">
+          <div className="min-h-[calc(100vh-64px)] flex flex-col pt-2 sm:pt-4">
+            <MotionBlock className="text-center">
+              <Pill className="mx-auto w-fit">
+                <ShieldCheckIcon className="h-4 w-4" />
+                Science
+              </Pill>
+              <h2 className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
+                Built on privacy. Backed by science.
+              </h2>
+              <p className="mt-3 text-sm md:text-base text-slate-600 max-w-3xl mx-auto">
+                ScubaMind combines local processing, passive sensing, and clinically
+                grounded models to deliver mental well-being support that is private,
+                practical, and evidence-based.
+              </p>
+            </MotionBlock>
+
+            <motion.div
+              className="mt-10 relative max-w-3xl mx-auto w-full"
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.25 }}
+              variants={{
+                hidden: { opacity: 0 },
+                show: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.08, delayChildren: 0.05 },
+                },
+              }}
+            >
+              {/* center badge */}
+              <div
+                className="hidden md:grid absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12 rounded-2xl bg-white/80 border border-black/10 backdrop-blur place-items-center shadow-sm z-10"
+                aria-hidden="true"
+              >
+                <ShieldCheckIcon className="h-6 w-6 text-slate-700" />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 items-stretch">
+                <motion.div
+                  variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Card className="p-6 rounded-3xl bg-white/85 backdrop-blur text-left h-full">
+                    <div className="flex items-start gap-4">
+                      <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                        <ShieldCheckIcon className="h-6 w-6 text-emerald-700" />
+                      </div>
+                      <div>
+                        <div className="font-extrabold text-slate-900">
+                          Privacy-first by design
+                        </div>
+                        <div className="mt-1 text-sm text-slate-600">
+                          Raw data never leaves your device. You’re in control.
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+
+                <motion.div
+                  variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Card className="p-6 rounded-3xl bg-white/85 backdrop-blur text-left h-full">
+                    <div className="flex items-start gap-4">
+                      <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                        <DevicePhoneMobileIcon className="h-6 w-6 text-indigo-700" />
+                      </div>
+                      <div>
+                        <div className="font-extrabold text-slate-900">
+                          On-device processing
+                        </div>
+                        <div className="mt-1 text-sm text-slate-600">
+                          Advanced models run locally for speed and privacy.
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+
+                <motion.div
+                  variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Card className="p-6 rounded-3xl bg-white/85 backdrop-blur text-left h-full">
+                    <div className="flex items-start gap-4">
+                      <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                        <NoSymbolIcon className="h-6 w-6 text-sky-700" />
+                      </div>
+                      <div>
+                        <div className="font-extrabold text-slate-900">
+                          Passive &amp; unobtrusive
+                        </div>
+                        <div className="mt-1 text-sm text-slate-600">
+                          No surveys. No manual input. Just life, as it happens.
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+
+                <motion.div
+                  variants={{ hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } }}
+                  transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <Card className="p-6 rounded-3xl bg-white/85 backdrop-blur text-left h-full">
+                    <div className="flex items-start gap-4">
+                      <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                        <BeakerIcon className="h-6 w-6 text-violet-700" />
+                      </div>
+                      <div>
+                        <div className="font-extrabold text-slate-900">
+                          Evidence-based insights
+                        </div>
+                        <div className="mt-1 text-sm text-slate-600">
+                          Grounded in clinical research and validated signal science.
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              </div>
+            </motion.div>
+
+            <MotionBlock delay={0.05} className="mt-10">
+              <Card className="rounded-3xl bg-white/75 backdrop-blur max-w-5xl mx-auto overflow-hidden">
+                <div className="grid md:grid-cols-4 text-left divide-y md:divide-y-0 md:divide-x divide-black/10">
+                  <div className="flex items-start gap-3 px-5 py-4">
+                    <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                      <ShieldCheckIcon className="h-6 w-6 text-emerald-700" />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">
+                        100% On-device
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        No raw data leaves your device.
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 px-5 py-4">
+                    <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                      <LockClosedIcon className="h-6 w-6 text-slate-700" />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">
+                        Privacy by design
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        Signals are processed entirely on-device to protect privacy.
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 px-5 py-4">
+                    <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                      <HeartIcon className="h-6 w-6 text-emerald-700" />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">
+                        You’re in control
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        Your data stays yours. Always.
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 px-5 py-4">
+                    <div className="h-11 w-11 rounded-2xl bg-white/80 border border-black/10 grid place-items-center shrink-0">
+                      <BeakerIcon className="h-6 w-6 text-violet-700" />
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">
+                        Grounded in science
+                      </div>
+                      <div className="text-xs text-slate-600">
+                        Built on clinical research and validated models.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </MotionBlock>
+          </div>
+        </div>
       </section>
 
       {/* Team */}
       <section id="team" className="sm-hero-bg sm-snap-section min-h-screen pt-16">
         <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
           <MotionBlock className="text-center">
-            <Pill className="mx-auto w-fit">Team</Pill>
+            <Pill className="mx-auto w-fit">
+              <UserGroupIcon className="h-4 w-4" />
+              Team
+            </Pill>
             <h2 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
               Meet the ScubaMind team
             </h2>
@@ -766,10 +1180,13 @@ export default function App() {
       </section>
 
       {/* Reports */}
-      <section id="reports" className="sm-hero-bg sm-snap-section min-h-screen pt-16">
+      <section id="reports" className="sm-docs-bg sm-snap-section min-h-screen pt-16">
         <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
           <MotionBlock className="text-center">
-            <Pill className="mx-auto w-fit">Documents</Pill>
+            <Pill className="mx-auto w-fit">
+              <DocumentTextIcon className="h-4 w-4" />
+              Documents
+            </Pill>
             <h2 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
               Project documents
             </h2>
@@ -805,18 +1222,23 @@ export default function App() {
                 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                <Card className="p-6 rounded-3xl bg-white/85 backdrop-blur text-left hover:bg-white transition h-full">
+                <Card className="p-6 rounded-3xl bg-white/80 backdrop-blur text-left transition h-full border border-black/10 hover:bg-white hover:-translate-y-0.5 hover:shadow-xl">
                   <div className="flex items-start gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-slate-900/5 border border-black/10 grid place-items-center shrink-0">
-                      <ChartBarIcon className="h-6 w-6 text-slate-700" />
+                    <div className="h-12 w-12 rounded-2xl bg-white/70 border border-black/10 grid place-items-center shrink-0">
+                      <DocumentTextIcon className="h-6 w-6 text-slate-700" />
                     </div>
-                    <div className="min-w-0">
-                      <div className="font-extrabold text-slate-900 leading-snug">
-                        {r.title}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="font-extrabold text-slate-900 leading-snug">
+                          {r.title}
+                        </div>
+                        <span className="shrink-0 inline-flex items-center rounded-full bg-slate-900/5 px-2 py-1 text-[11px] font-extrabold text-slate-700">
+                          PDF
+                        </span>
                       </div>
                       <div className="mt-1 text-sm text-slate-600">{r.meta}</div>
-                      <div className="mt-3 text-sm font-semibold text-slate-900">
-                        Open PDF <span aria-hidden="true">↗</span>
+                      <div className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-slate-900">
+                        Open document <span aria-hidden="true">↗</span>
                       </div>
                     </div>
                   </div>
@@ -831,7 +1253,10 @@ export default function App() {
       <section id="contact" className="sm-hero-bg sm-snap-section min-h-screen pt-16">
         <div className="mx-auto max-w-6xl px-4 md:px-6 py-12 md:py-16">
           <MotionBlock className="text-center">
-            <Pill className="mx-auto w-fit">Contact</Pill>
+            <Pill className="mx-auto w-fit">
+              <EnvelopeIcon className="h-4 w-4" />
+              Contact
+            </Pill>
             <h2 className="mt-4 text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900">
               Get in touch
             </h2>
@@ -859,7 +1284,7 @@ export default function App() {
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               className="h-full"
             >
-              <Card className="p-6 rounded-3xl bg-white/85 backdrop-blur text-left h-full">
+              <Card className="p-6 rounded-3xl bg-white/80 backdrop-blur text-left h-full border border-black/10 hover:bg-white transition">
               <div className="font-extrabold text-slate-900 text-lg">
                 Quick contacts
               </div>
@@ -904,7 +1329,7 @@ export default function App() {
               transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
               className="h-full"
             >
-              <Card className="p-6 rounded-3xl bg-white/85 backdrop-blur text-left h-full">
+              <Card className="p-6 rounded-3xl bg-white/80 backdrop-blur text-left h-full border border-black/10 hover:bg-white transition">
               <div className="font-extrabold text-slate-900 text-lg">
                 Contact form
               </div>
@@ -943,7 +1368,7 @@ export default function App() {
                   <input
                     name="name"
                     required
-                    className="rounded-2xl border border-black/10 bg-white/70 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-sky-200"
+                    className="rounded-2xl border border-black/10 bg-white/70 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-sky-200/70 focus:border-sky-200"
                     placeholder="Jane Doe"
                   />
                 </label>
@@ -955,7 +1380,7 @@ export default function App() {
                     name="email"
                     type="email"
                     required
-                    className="rounded-2xl border border-black/10 bg-white/70 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-sky-200"
+                    className="rounded-2xl border border-black/10 bg-white/70 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-sky-200/70 focus:border-sky-200"
                     placeholder="jane.doe@example.com"
                   />
                 </label>
@@ -967,7 +1392,7 @@ export default function App() {
                     name="message"
                     required
                     rows={6}
-                    className="rounded-2xl border border-black/10 bg-white/70 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-sky-200 resize-none"
+                    className="rounded-2xl border border-black/10 bg-white/70 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-sky-200/70 focus:border-sky-200 resize-none"
                     placeholder="Write your message…"
                   />
                 </label>
@@ -975,7 +1400,7 @@ export default function App() {
                 <div className="flex items-center justify-between gap-3 mt-1">
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-2 rounded-full bg-sky-600 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-sky-700 transition"
+                    className="inline-flex items-center gap-2 rounded-full bg-sky-600 px-4 py-2.5 text-sm font-extrabold text-white hover:bg-sky-700 transition shadow-sm shadow-sky-600/20"
                   >
                     <EnvelopeIcon className="h-4 w-4" />
                     Send message
@@ -1023,7 +1448,7 @@ export default function App() {
                     href="#reports"
                     className="text-slate-700 hover:text-slate-900"
                   >
-                    Reports
+                    Documents
                   </a>
                   <a
                     href={GITHUB_URL}
