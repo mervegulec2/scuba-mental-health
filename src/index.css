@@ -21,6 +21,13 @@ html {
   scroll-padding-top: 0;
 }
 
+@media (max-width: 768px) {
+  html {
+    scroll-snap-type: none;
+    scroll-padding-top: var(--sm-header-h);
+  }
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -87,6 +94,19 @@ body {
   background-image: url("/landing/science-bg.png");
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sm-team-bg,
+.sm-reports-bg,
+.sm-contact-bg {
+  background: #ffffff;
+  background-image:
+    radial-gradient(900px 500px at 15% 10%, rgba(14, 165, 233, 0.14), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(16, 185, 129, 0.12), transparent 60%),
+    url("/landing/section-waves.svg");
+  background-size: auto, auto, cover;
+  background-position: left top, right top, center;
   background-repeat: no-repeat;
 }
 
