@@ -380,21 +380,31 @@ export default function App() {
                   </MotionBlock>
                 </div>
 
-                {/* Right column: 16:9 video */}
-                <div id="watch" className="relative">
-                  <MotionBlock delay={0.06} y={18}>
-                    <div className="rounded-2xl overflow-hidden border border-black/10 bg-white shadow-2xl">
-                      <div className="relative aspect-video bg-black/10">
-                        <img
-                          src="/landing/trailer-poster.png"
-                          alt=""
-                          className="absolute inset-0 h-full w-full object-cover"
-                          loading="eager"
-                          decoding="async"
-                        />
-                      </div>
+                {/* Right column: 16:9 video — not wrapped in MotionBlock so controls always receive clicks */}
+                <div id="watch" className="relative w-full min-w-0">
+                  <div className="rounded-2xl overflow-hidden border border-black/10 bg-white shadow-2xl">
+                    <div className="relative aspect-video w-full bg-black/10">
+                      <video
+                        className="absolute inset-0 h-full w-full object-cover"
+                        poster="/landing/trailer-poster.png"
+                        controls
+                        playsInline
+                        preload="metadata"
+                        aria-label="ScubaMind introduction video"
+                        onError={(e) => {
+                          const err = e.currentTarget.error;
+                          console.error(
+                            "Video failed:",
+                            err?.code,
+                            err?.message ?? "(no MediaError)"
+                          );
+                        }}
+                      >
+                        <source src="/landing/hero-trailer.mp4" />
+                        Your browser does not support embedded video.
+                      </video>
                     </div>
-                  </MotionBlock>
+                  </div>
                 </div>
               </div>
             </div>
