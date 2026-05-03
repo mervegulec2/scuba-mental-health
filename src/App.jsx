@@ -29,10 +29,18 @@ const navItems = [
 
 const GITHUB_URL = "https://github.com/yigitkosum/scubamind";
 
-const REPORT_FILE_URLS = import.meta.glob("./assets/*.pdf", {
-  eager: true,
-  import: "default",
-});
+/** Whitelist (literal paths required by Vite glob); order below. */
+const REPORT_FILE_URLS = import.meta.glob(
+  [
+    "./assets/ScubaMind - Mental Health - User_Manual.pdf",
+    "./assets/ScubaMind – Mental-Health Final Presentation.pdf",
+    "./assets/T2507_Project_Specification_Document.pdf",
+    "./assets/T2507_Analysis_and_Requirement_Report.pdf",
+    "./assets/T2507_Detailed_Design_Report.pdf",
+    "./assets/T2507_Final_Report.pdf",
+  ],
+  { eager: true, import: "default" }
+);
 
 function titleFromAssetPath(assetPath) {
   const filename = assetPath.split("/").pop() ?? assetPath;
@@ -43,6 +51,17 @@ function titleFromAssetPath(assetPath) {
     .trim();
 }
 
+const REPORT_ORDER = new Map(
+  [
+    "./assets/ScubaMind - Mental Health - User_Manual.pdf",
+    "./assets/ScubaMind – Mental-Health Final Presentation.pdf",
+    "./assets/T2507_Project_Specification_Document.pdf",
+    "./assets/T2507_Analysis_and_Requirement_Report.pdf",
+    "./assets/T2507_Detailed_Design_Report.pdf",
+    "./assets/T2507_Final_Report.pdf",
+  ].map((p, i) => [p, i])
+);
+
 const REPORTS = Object.entries(REPORT_FILE_URLS)
   .map(([path, href]) => ({
     title: titleFromAssetPath(path),
@@ -51,7 +70,10 @@ const REPORTS = Object.entries(REPORT_FILE_URLS)
     path,
   }))
   .filter((r) => !/project[_\s-]*information[_\s-]*form/i.test(r.path))
-  .sort((a, b) => a.title.localeCompare(b.title));
+  .sort(
+    (a, b) =>
+      (REPORT_ORDER.get(a.path) ?? 999) - (REPORT_ORDER.get(b.path) ?? 999)
+  );
 
 const TEAM = [
   { name: "Metin Çalışkan", image: "/team/metin.jpg" },
@@ -314,7 +336,7 @@ export default function App() {
         <div className="mx-auto max-w-7xl w-full px-4 md:px-6 py-14 md:py-16">
           <div className="min-h-[calc(100vh-64px)] flex items-center">
             <div className="md:-translate-y-24 w-full">
-              <div className="grid lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.3fr)] gap-10 lg:gap-14 items-stretch">
+              <div className="grid lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.5fr)] gap-10 lg:gap-14 items-stretch">
                 {/* Left column: top aligned to video top, bottom aligned to video bottom */}
                 <div className="flex flex-col h-full">
                   <MotionBlock>
@@ -1221,7 +1243,7 @@ export default function App() {
           >
             {REPORTS.map((r) => (
               <motion.a
-                key={r.title}
+                key={r.path}
                 href={r.href}
                 target="_blank"
                 rel="noreferrer"
